@@ -57,37 +57,7 @@ A comprehensive digital meter management system built with Flask, designed to he
 
 - **SQLite** (default) or configurable SQL database via SQLAlchemy
 
-## 📁 Project Structure
 
-Digital Meter Service/
-├── app.py # Application entry point
-├── website/ # Main Flask package
-│ ├── **init**.py # Flask app initialization, mail config
-│ ├── auth.py # Authentication routes (login/signup)
-│ ├── views.py # Main application views and routes
-│ ├── models.py # Database models (User, Profile, etc.)
-│ ├── extensions.py # Flask extensions initialization
-│ ├── complain.py # Complaint handling and forms
-│ ├── scheduler.py # Background task scheduling
-│ ├── sms_utils.py # SMS utility functions
-│ ├── static/ # Static files
-│ │ ├── \*.css # Stylesheets
-│ │ └── Images/ # Image assets
-│ └── Templates/ # HTML templates
-│ ├── base.html # Base template
-│ ├── index.html # Homepage
-│ ├── login.html # Login page
-│ ├── signup.html # Registration page
-│ ├── dashboard.html
-│ ├── bill_summary.html
-│ ├── check_balance.html
-│ ├── payment.html
-│ ├── complain.html
-│ ├── admin_dashboard.html
-│ └── [other templates]
-├── instance/ # Instance-specific configuration
-├── README.md # This file
-└── pycache/ # Python cache files
 
 ## 🚀 Installation
 
@@ -132,44 +102,6 @@ Digital Meter Service/
    python app.py
    ```
 
-Usage
-User Registration & Login
-Navigate to /signup to create a new account
-Use /login to log in with credentials
-Dashboard
-View electricity consumption and bill information
-Check account balance
-Access payment history
-Meter Management
-View all associated meter accounts
-Track consumption data
-Bill Payments
-Process electricity bill payments
-View transaction history
-Complaints
-Submit new complaints about electricity service
-Attach supporting documents (PDF)
-Track complaint status
-Admin Panel
-Access /admin_dashboard for administrative functions
-Manage users and complaints
-📝 File Descriptions
-File Purpose
-app.py Application entry point, starts Flask development server
-**init**.py Flask app factory, database initialization, mail & SMS config
-auth.py User authentication (signup, login, logout)
-views.py Main application routes and view functions
-models.py SQLAlchemy database models
-extensions.py Flask extensions (db, login manager)
-complain.py Complaint form handling and email notifications
-scheduler.py Background task scheduling
-sms_utils.py SMS sending utilities
-🤝 Contributing
-Fork the repository
-Create a feature branch (git checkout -b feature/amazing-feature)
-Commit your changes (git commit -m 'Add amazing feature')
-Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
 
 
 
