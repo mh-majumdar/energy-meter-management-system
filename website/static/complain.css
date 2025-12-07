@@ -1,0 +1,200 @@
+/* Additional CSS for complaint page - Add this to your index.css or create a separate complaint.css */
+
+/* Form Styling */
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control-lg {
+    padding: 16px 20px;
+    font-size: 18px;
+}
+
+.form-label {
+    color: #495057;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* Custom File Input Styling */
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group .input-group-text {
+    background-color: #f8f9fa;
+    border-left: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.input-group .input-group-text:hover {
+    background-color: #e9ecef;
+}
+
+/* Action Button Enhancement */
+.action-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+.action-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Alert Styling */
+.alert {
+    border: none;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+/* Feature Card Enhancement for Form */
+.feature-card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Image Preview Styling */
+#imagePreview {
+    position: relative;
+}
+
+#imagePreview .img-thumbnail {
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#removeImage {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contact Information Cards */
+.feature-card .fa-2x {
+    color: #667eea;
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .feature-card {
+        margin-bottom: 20px;
+    }
+    
+    .action-button {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    #imagePreview .img-thumbnail {
+        max-width: 150px;
+        max-height: 150px;
+    }
+}
+
+/* Form Validation Styling */
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+}
+
+.text-danger {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Character Counter */
+#charCounter {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Enhanced Header Banner */
+.header-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header-banner h2 {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.header-banner p {
+    opacity: 0.9;
+    margin-bottom: 0;
+}

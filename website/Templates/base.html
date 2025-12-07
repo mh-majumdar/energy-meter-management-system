@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meter Syns.</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='base.css') }}"
+    />
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-cash-coin"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"
+      />
+      <path
+        d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z"
+      />
+      <path
+        d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z"
+      />
+      <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567" />
+    </svg>
+
+    <!-- Sidebar Navigation -->
+    <header>
+      <nav
+        id="sidebarMenu"
+        class="collapse d-lg-block sidebar collapse bg-white"
+      >
+        <div class="position-sticky">
+          <div class="list-group list-group-flush mx-3 mt-4">
+            <a
+              href="{{ url_for('views.home') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+              aria-current="true"
+            >
+              <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Home</span>
+            </a>
+            <a
+              href="{{ url_for('views.dashboard') }}"
+              class="list-group-item list-group-item-action py-2"
+            >
+              <i class="fa-solid fa-house me-3"></i><span>Dashboard</span>
+            </a>
+            <a
+              href="{{ url_for('views.user_info') }}"
+              class="list-group-item list-group-item-action py-2"
+            >
+              <i class="fas fa-user fa-fw me-3"></i><span>User Profile</span>
+            </a>
+
+            <a
+              href="{{ url_for('views.balance') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-bangladeshi-taka-sign me-3"></i
+              ><span>Check Balance</span>
+            </a>
+            <a
+              href="{{ url_for('views.payment') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa fa-bank me-3"></i><span>Add Funds</span>
+            </a>
+            <a
+              href="{{ url_for('views.sendfunds') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-paper-plane me-3"></i
+              ><span>Send Funds</span>
+            </a>
+
+            <a
+              href="{{ url_for('views.payment_history') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fas fa-history me-3"></i><span>Payment History</span>
+            </a>
+
+            <a
+              href="{{ url_for('views.components') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-calculator me-3"></i
+              ><span>Load Calculation</span>
+            </a>
+            <a
+              href="{{ url_for('views.energy_uses') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-chart-simple me-3"></i
+              ><span>Enery Uses History</span>
+            </a>
+            <a
+              href="{{ url_for('views.bill_summary') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-wallet me-3"></i><span>Monthly Bill</span>
+            </a>
+            <a
+              href="{{ url_for('views.power_grid') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-bolt me-3"></i
+              ><span>National Power Grid</span>
+            </a>
+
+            <a
+              href="{{ url_for('views.complain') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fa-solid fa-comment me-3"></i><span>Complain</span>
+            </a>
+            <a
+              href="{{ url_for('auth.logout') }}"
+              class="list-group-item list-group-item-action py-2 ripple"
+            >
+              <i class="fas fa-sign-out-alt me-3"></i><span>Log Out</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Navbar -->
+      <nav
+        id="main-navbar"
+        class="navbar navbar-expand-lg navbar-light bg-white fixed-top"
+      >
+        <div class="container-fluid">
+          <!-- Toggle button -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Brand -->
+          <h6>Meter Syns.</h6>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main style="margin-top: 58px">
+      <div class="container pt-4">
+        {% block content %}{% endblock %} {% block signup %}{% endblock %}
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer bg-dark text-light py-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <h5>About Us</h5>
+              <p>
+                We provide exceptional services and solutions tailored to your
+                needs. Dedicated to excellence and innovation.
+              </p>
+            </div>
+            <div class="col-md-4">
+              <h5>Quick Links</h5>
+              <ul class="list-unstyled">
+                <li>
+                  <a href="#" class="text-light text-decoration-none">Home</a>
+                </li>
+                <li>
+                  <a href="#" class="text-light text-decoration-none">About</a>
+                </li>
+                <li>
+                  <a href="#" class="text-light text-decoration-none"
+                    >Services</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-light text-decoration-none"
+                    >Contact</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <h5>Contact Us</h5>
+              <p>Email: mh.majumdar1952@gmail.com</p>
+              <p>Phone: +8801521558116</p>
+              <p>Address: Noakhali, Bangladesh</p>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <p>&copy; All Rights Reserved by M.H. Majumdar.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

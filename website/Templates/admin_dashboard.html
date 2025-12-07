@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flask Admin Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .dashboard-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 2rem 0;
+      }
+
+      .sidebar h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+      }
+
+      .nav-item {
+        display: block;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        padding: 1rem 2rem;
+        transition: all 0.3s ease;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .main-content {
+        padding: 2rem;
+        overflow-y: auto;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .content-section {
+        display: none;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      .section-title {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 0.5rem;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      th,
+      td {
+        padding: 0.8rem 0.6rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      th {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      td {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .btn {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin: 0.2rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-view {
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      }
+
+      .btn-edit {
+        background: linear-gradient(45deg, #ffa726, #ff9800);
+      }
+
+      .search-filter {
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .search-bar {
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        min-width: 250px;
+      }
+
+      .search-bar::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+      }
+
+      .field-group {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+      }
+
+      .field-group h4 {
+        color: #4ecdc4;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 0.5rem;
+      }
+
+      .field-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.8rem;
+      }
+
+      .field-item {
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+      }
+
+      .field-type {
+        color: #ffa726;
+        font-weight: 500;
+      }
+
+      .relationship-info {
+        background: rgba(76, 175, 80, 0.1);
+        border-left: 4px solid #4caf50;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+      }
+
+      .relationship-info h5 {
+        color: #4caf50;
+        margin-bottom: 0.5rem;
+      }
+
+      .relationship-info p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: -280px;
+          height: 100vh;
+          transition: left 0.3s ease;
+          z-index: 100;
+        }
+
+        .search-filter {
+          flex-direction: column;
+        }
+
+        .search-bar {
+          min-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <nav class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <button class="nav-item active" onclick="showSection('overview')">
+          Overview
+        </button>
+        <button class="nav-item" onclick="showSection('users')">
+          Users Table
+        </button>
+        <button class="nav-item" onclick="showSection('profiles')">
+          Profiles Table
+        </button>
+        <button class="nav-item" onclick="showSection('meter-accounts')">
+          Meter Accounts
+        </button>
+        <button class="nav-item" onclick="showSection('transactions')">
+          Transactions
+        </button>
+        <button class="nav-item" onclick="showSection('models')">
+          Model Structure
+        </button>
+      </nav>
+
+      <main class="main-content">
+        <div class="header">
+          <h1>Flask Application Admin Panel</h1>
+          <p>Database Models: User, Profile, MeterAccount, Transaction</p>
+        </div>
+
+        <!-- Overview Section -->
+        <section id="overview" class="content-section active">
+          <h2 class="section-title">Database Overview</h2>
+          <div class="stats-overview">
+            <div class="stat-card">
+              <div class="stat-number">4</div>
+              <div class="stat-label">Database Models</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">45</div>
+              <div class="stat-label">Total Fields</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">6</div>
+              <div class="stat-label">Relationships</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">3</div>
+              <div class="stat-label">Foreign Keys</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users" class="content-section">
+          <h2 class="section-title">Users Management</h2>
+          <div class="search-filter">
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search users by username, email..."
+              onkeyup="searchTable('usersTable', this.value)"
+            />
+          </div>
+          <div class="table-container">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Password Hash</th>
+                  <th>Date Created</th>
+                  <th>Has Profile</th>
+                  <th>Has Meter</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Mehedi Hasan</td>
+                  <td>mh.majumdar1952@gmail.com</td>
+                  <td>pbkdf2:sha256:260000$...</td>
+                  <td>2024-01-15 10:30:00</td>
+                  <td>✓ Yes</td>
+                  <td>✓ Yes</td>
+                  <td>
+                    <button class="btn btn-view">View</button>
+                    <button class="btn btn-edit">Edit</button>
+                    <button class="btn">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  
+                    <button class="btn btn-view">View</button>
+                    <button class="btn btn-edit">Edit</button>
+                    <button class="btn">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Profiles Section -->
+        <section id="profiles" class="content-section">
+          <h2 class="section-title">User Profiles</h2>
+          <div class="search-filter">
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search profiles by name, department, student ID..."
+              onkeyup="searchTable('profilesTable', this.value)"
+            />
+          </div>
+          <div class="table-container">
+            <table id="profilesTable">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Father's Name</th>
+                  <th>Mother's Name</th>
+                  <th>DOB</th>
+                  <th>Phone</th>
+                  
+                  <th>Meter ID</th>
+                  <th>Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Robert Doe</td>
+                  <td>Mary Doe</td>
+                  <td>1999-05-15</td>
+                  <td>+8801712345678</td>
+                 
+                  <td>BD-2025-00047</td>
+                  <td>2024-01-22</td>
+                  <td>
+                    <button class="btn btn-view">View Full</button>
+                    <button class="btn btn-edit">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Michael Smith</td>
+                  <td>Sarah Smith</td>
+                  <td>2000-03-22</td>
+                  <td>+8801787654321</td>
+                 
+                  <td>-</td>
+                  <td>2024-01-25</td>
+                  <td>
+                    <button class="btn btn-view">View Full</button>
+                    <button class="btn btn-edit">Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Meter Accounts Section -->
+        <section id="meter-accounts" class="content-section">
+          <h2 class="section-title">Meter Accounts</h2>
+          <div class="search-filter">
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search by meter ID, user ID..."
+              onkeyup="searchTable('meterTable', this.value)"
+            />
+          </div>
+          <div class="table-container">
+            <table id="meterTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Meter ID</th>
+                  <th>User ID</th>
+                  <th>Username</th>
+                  <th>Balance</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th>Transactions</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>BD-2025-00048</td>
+                  <td>1</td>
+                  <td>john_doe</td>
+                  <td>৳125.50</td>
+                  <td>2024-01-15</td>
+                  <td>2024-01-25</td>
+                  <td>15 transactions</td>
+                  <td>
+                    <button class="btn btn-view">View</button>
+                    <button class="btn btn-edit">Add Balance</button>
+                    <button class="btn">Reset</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>MTR002</td>
+                  <td>3</td>
+                  <td>alex_khan</td>
+                  <td>৳90.00</td>
+                  <td>2024-01-18</td>
+                  <td>2024-01-18</td>
+                  <td>1 transaction</td>
+                  <td>
+                    <button class="btn btn-view">View</button>
+                    <button class="btn btn-edit">Add Balance</button>
+                    <button class="btn">Reset</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="content-section">
+          <h2 class="section-title">Transaction History</h2>
+          <div class="search-filter">
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search transactions..."
+              onkeyup="searchTable('transactionTable', this.value)"
+            />
+          </div>
+          <div class="table-container">
+            <table id="transactionTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Meter Account</th>
+                  <th>Amount</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Reference ID</th>
+                  <th>Sender</th>
+                  <th>Receiver</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>MTR001</td>
+                  <td>৳50.00</td>
+                  <td>add</td>
+                  <td>Balance top-up</td>
+                  <td>REF001</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>2024-01-20 10:30</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>MTR001</td>
+                  <td>৳25.00</td>
+                  <td>send</td>
+                  <td>Transfer to friend</td>
+                  <td>REF002</td>
+                  <td>MTR001</td>
+                  <td>MTR003</td>
+                  <td>2024-01-22 15:45</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>MTR003</td>
+                  <td>৳25.00</td>
+                  <td>receive</td>
+                  <td>Received from friend</td>
+                  <td>REF002</td>
+                  <td>MTR001</td>
+                  <td>MTR003</td>
+                  <td>2024-01-22 15:45</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Model Structure Section -->
+        <section id="models" class="content-section">
+          <h2 class="section-title">Database Model Structure</h2>
+
+          <div class="field-group">
+            <h4>User Model (UserMixin)</h4>
+            <div class="field-list">
+              <div class="field-item">
+                id: <span class="field-type">Integer (Primary Key)</span>
+              </div>
+              <div class="field-item">
+                username: <span class="field-type">String(150) - Unique</span>
+              </div>
+              <div class="field-item">
+                email: <span class="field-type">String(150) - Unique</span>
+              </div>
+              <div class="field-item">
+                password_hash: <span class="field-type">String(256)</span>
+              </div>
+              <div class="field-item">
+                date_created:
+                <span class="field-type">DateTime with timezone</span>
+              </div>
+            </div>
+            <div class="relationship-info">
+              <h5>Relationships:</h5>
+              <p>• One-to-One with Profile (backref: 'user')</p>
+              <p>• One-to-One with MeterAccount (backref: 'meter_account')</p>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <h4>Profile Model</h4>
+            <div class="field-list">
+              <div class="field-item">
+                id: <span class="field-type">Integer (Primary Key)</span>
+              </div>
+              <div class="field-item">
+                user_id: <span class="field-type">Integer (Foreign Key)</span>
+              </div>
+              <div class="field-item">
+                fathers_name: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                mothers_name: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                date_of_birth: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                phone: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                guardians_name: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                guardians_phone: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                hall_for_residence: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                hall_for_roll: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                blood_group: <span class="field-type">String(10)</span>
+              </div>
+              <div class="field-item">
+                religion: <span class="field-type">String(50)</span>
+              </div>
+              <div class="field-item">
+                nationality: <span class="field-type">String(50)</span>
+              </div>
+              <div class="field-item">
+                nid_number: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                gender: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                marital_status: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                academic_level: <span class="field-type">String(50)</span>
+              </div>
+              <div class="field-item">
+                faculty: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                department: <span class="field-type">String(150)</span>
+              </div>
+              <div class="field-item">
+                session: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                year_term: <span class="field-type">String(30)</span>
+              </div>
+              <div class="field-item">
+                student_id: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                meter_id: <span class="field-type">String(100)</span>
+              </div>
+              <div class="field-item">
+                connection_type: <span class="field-type">String(50)</span>
+              </div>
+              <div class="field-item">
+                phone_no: <span class="field-type">String(100)</span>
+              </div>
+              <div class="field-item">
+                installation_date: <span class="field-type">String(20)</span>
+              </div>
+              <div class="field-item">
+                supply_voltage: <span class="field-type">String(50)</span>
+              </div>
+              <div class="field-item">
+                updated_at:
+                <span class="field-type">DateTime (auto-update)</span>
+              </div>
+            </div>
+            <p
+              style="
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 1rem;
+                font-size: 0.9rem;
+              "
+            >
+              <strong>Address Fields:</strong> Present & Permanent addresses
+              with division, district, upazilla, post_office, village,
+              house_name, house_no, road_no
+            </p>
+          </div>
+
+          <div class="field-group">
+            <h4>MeterAccount Model</h4>
+            <div class="field-list">
+              <div class="field-item">
+                id: <span class="field-type">Integer (Primary Key)</span>
+              </div>
+              <div class="field-item">
+                meter_id: <span class="field-type">String(20) - Unique</span>
+              </div>
+              <div class="field-item">
+                user_id: <span class="field-type">Integer (Foreign Key)</span>
+              </div>
+              <div class="field-item">
+                balance: <span class="field-type">Float (default: 90.0)</span>
+              </div>
+              <div class="field-item">
+                created_at: <span class="field-type">DateTime</span>
+              </div>
+              <div class="field-item">
+                updated_at:
+                <span class="field-type">DateTime (auto-update)</span>
+              </div>
+            </div>
+            <div class="relationship-info">
+              <h5>Relationships:</h5>
+              <p>• One-to-One with User (backref: 'meter_account')</p>
+              <p>• One-to-Many with Transaction (backref: 'account')</p>
+              <p>• One-to-Many sent_transactions (backref: 'sender')</p>
+              <p>• One-to-Many received_transactions (backref: 'receiver')</p>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <h4>Transaction Model</h4>
+            <div class="field-list">
+              <div class="field-item">
+                id: <span class="field-type">Integer (Primary Key)</span>
+              </div>
+              <div class="field-item">
+                meter_account_id:
+                <span class="field-type">Integer (Foreign Key)</span>
+              </div>
+              <div class="field-item">
+                amount: <span class="field-type">Float</span>
+              </div>
+              <div class="field-item">
+                transaction_type:
+                <span class="field-type"
+                  >String(20) ['add', 'send', 'receive']</span
+                >
+              </div>
+              <div class="field-item">
+                description: <span class="field-type">String(255)</span>
+              </div>
+              <div class="field-item">
+                reference_id: <span class="field-type">String(100)</span>
+              </div>
+              <div class="field-item">
+                created_at: <span class="field-type">DateTime</span>
+              </div>
+              <div class="field-item">
+                sender_id:
+                <span class="field-type">Integer (Foreign Key - nullable)</span>
+              </div>
+              <div class="field-item">
+                receiver_id:
+                <span class="field-type">Integer (Foreign Key - nullable)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Navigation
+      function showSection(sectionId) {
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        document.querySelectorAll(".nav-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        document.getElementById(sectionId).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      // Search functionality
+      function searchTable(tableId, searchTerm) {
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          let found = false;
+          const cells = rows[i].getElementsByTagName("td");
+
+          for (let j = 0; j < cells.length - 1; j++) {
+            if (
+              cells[j].textContent
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            ) {
+              found = true;
+              break;
+            }
+          }
+
+          rows[i].style.display = found ? "" : "none";
+        }
+      }
+
+      // Sample data management (in real app, this would connect to Flask API)
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log(
+          "Dashboard loaded with model structure from your Flask app"
+        );
+        console.log("Models: User, Profile, MeterAccount, Transaction");
+        console.log("Ready to connect to Flask API endpoints");
+      });
+    </script>
+  </body>
+</html>

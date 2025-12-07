@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile Form{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile_form.css') }}" />
+<div class="container mt-4">
+    <h1 class="mb-4">User Profile Information</h1>
+    
+    <form action="{{ url_for('views.user_info') }}" method="POST">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h4>Personal Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="fathers_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="fathers_name" name="fathers_name" value="{{ profile.fathers_name or '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="mothers_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="mothers_name" name="mothers_name" value="{{ profile.mothers_name or '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="date_of_birth" class="form-label">Date of Birth</label>
+                        <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ profile.date_of_birth or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="nid_number" class="form-label">NID Number</label>
+                        <input type="text" class="form-control" id="nid_number" name="nid_number" value="{{ profile.nid_number or '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="guardians_name" class="form-label">Father's Name</label>
+                        <input type="text" class="form-control" id="guardians_name" name="guardians_name" value="{{ profile.guardians_name or '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="guardians_phone" class="form-label">Mother's Phone</label>
+                        <input type="text" class="form-control" id="guardians_phone" name="guardians_phone" value="{{ profile.guardians_phone or '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    
+                
+                   
+                    
+                   
+                
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>Present Address</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="present_division" class="form-label">Division</label>
+                        <input type="text" class="form-control" id="present_division" name="present_division" value="{{ profile.present_division or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="present_district" class="form-label">District</label>
+                        <input type="text" class="form-control" id="present_district" name="present_district" value="{{ profile.present_district or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="present_upazilla" class="form-label">Upazilla</label>
+                        <input type="text" class="form-control" id="present_upazilla" name="present_upazilla" value="{{ profile.present_upazilla or '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="present_post_office" class="form-label">Post Office</label>
+                        <input type="text" class="form-control" id="present_post_office" name="present_post_office" value="{{ profile.present_post_office or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="present_village" class="form-label">Village</label>
+                        <input type="text" class="form-control" id="present_village" name="present_village" value="{{ profile.present_village or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="present_house_name" class="form-label">House Name</label>
+                        <input type="text" class="form-control" id="present_house_name" name="present_house_name" value="{{ profile.present_house_name or '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="present_house_no" class="form-label">House No</label>
+                        <input type="text" class="form-control" id="present_house_no" name="present_house_no" value="{{ profile.present_house_no or '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="present_road_no" class="form-label">Road No</label>
+                        <input type="text" class="form-control" id="present_road_no" name="present_road_no" value="{{ profile.present_road_no or '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="card mb-4">
+            
+        </div>
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h4>Energy Meter Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="meter_id" class="form-label">Meter ID</label>
+                <input type="text" class="form-control" id="meter_id" name="meter_id" value="{{ profile.meter_id or '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="connection_type" class="form-label">Connection Type</label>
+                <select class="form-select" id="connection_type" name="connection_type">
+                    <option value="" {% if not profile.connection_type %}selected{% endif %}>Select</option>
+                    <option value="Prepaid" {% if profile.connection_type == 'Prepaid' %}selected{% endif %}>Prepaid</option>
+                    <option value="Postpaid" {% if profile.connection_type == 'Postpaid' %}selected{% endif %}>Postpaid</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="phone_no" class="form-label">Phone No.</label>
+                <input type="text" class="form-control" id="phone_no" name="phone_no" value="{{ profile.phone_no or '' }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="installation_date" class="form-label">Low Balance Alert</label>
+                <input type="text" class="form-control" id="installation_date" name="installation_date" placeholder="DD-MM-YYYY" value="{{ profile.installation_date or '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="supply_voltage" class="form-label">Supply Voltage</label>
+                <input type="text" class="form-control" id="supply_voltage" name="supply_voltage" value="{{ profile.supply_voltage or '' }}">
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+            <button type="submit" class="btn btn-primary">Save Profile Information</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

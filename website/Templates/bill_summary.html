@@ -1,0 +1,817 @@
+{% extends "base.html" %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Meter Bill Summary</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='bill_summary.css') }}"
+    />
+    <style>
+      .accordion {
+        margin: 20px 0;
+      }
+      .accordion-item {
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .accordion-header {
+        background: linear-gradient(135deg, #1976d2, #42a5f5);
+        color: white;
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+      .accordion-header:hover {
+        background: linear-gradient(135deg, #1565c0, #1976d2);
+      }
+      .accordion-header.active {
+        background: linear-gradient(135deg, #0d47a1, #1565c0);
+      }
+      .accordion-icon {
+        font-size: 20px;
+        transition: transform 0.3s ease;
+      }
+      .accordion-header.active .accordion-icon {
+        transform: rotate(180deg);
+      }
+      .accordion-content {
+        display: none;
+        padding: 0;
+        background: white;
+      }
+      .accordion-content.active {
+        display: block;
+      }
+      .main-header {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        margin-bottom: 20px;
+        border-radius: 12px;
+      }
+      .main-header h1 {
+        color: #1976d2;
+        margin: 0;
+        font-size: 24px;
+      }
+      .main-header p {
+        color: #666;
+        margin: 10px 0 0 0;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="my-container">
+      <div class="main-header">
+        <h1>⚡ Energy Meter Bill Management</h1>
+        <p>
+          Choose between viewing your monthly bill or calculating average
+          consumption
+        </p>
+      </div>
+
+      <div class="accordion">
+        <!-- Monthly Bill Accordion -->
+        <div class="accordion-item">
+          <div
+            class="accordion-header"
+            onclick="toggleAccordion('monthly-bill')"
+          >
+            <span>📄 Monthly Bill Summary</span>
+            <span class="accordion-icon">▼</span>
+          </div>
+          <div class="accordion-content" id="monthly-bill">
+            <div id="billContent">
+              <div class="header">
+                <div class="consumer-copy">CONSUMER'S COPY</div>
+                <div class="header-content">
+                  <div class="logo">⚡</div>
+                  <div class="bill-title">CONSUMER</div>
+                  <div class="bill-subtitle">
+                    BANGLADESH POWER DEVELOPMENT BOARD
+                  </div>
+                </div>
+              </div>
+
+              <div class="bill-content">
+                <div class="comprehensive-table">
+                  <div class="table-section">
+                    <div class="section-header">
+                      <div class="section-icon">👤</div>
+                      <h3>Consumer Information</h3>
+                    </div>
+                    <table class="data-table">
+                      <tr>
+                        <td class="label">Consumer No</td>
+                        <td class="value">78757343</td>
+                        <td class="label">Name</td>
+                        <td class="value">Mehedi Hasan</td>
+                      </tr>
+                      <tr>
+                        <td class="label">Location</td>
+                        <td class="value">Noakhali Sadar</td>
+                        <td class="label">Area</td>
+                        <td class="value">Noakhali - 3814</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="table-section">
+                    <div class="section-header">
+                      <div class="section-icon">📋</div>
+                      <h3>Bill Details</h3>
+                    </div>
+                    <table class="data-table">
+                      <tr>
+                        <td class="label">Month</td>
+                        <td class="value">Oct-21</td>
+                        <td class="label">Bill No</td>
+                        <td class="value">76323216</td>
+                        <td class="label">Issue Date</td>
+                        <td class="value">27/10/21</td>
+                      </tr>
+                      <tr>
+                        <td class="label">CD</td>
+                        <td class="value">66</td>
+                        <td class="label">Bill Group</td>
+                        <td class="value">09</td>
+                        <td class="label">Book No</td>
+                        <td class="value">W23</td>
+                      </tr>
+                      <tr>
+                        <td class="label">Walk Ord</td>
+                        <td class="value">1560</td>
+                        <td class="label">Last Payment</td>
+                        <td class="value">28/11/21</td>
+                        <td class="label">PRV A/C No</td>
+                        <td class="value">33957</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="table-section">
+                    <div class="section-header">
+                      <div class="section-icon">⚡</div>
+                      <h3>Meter & Tariff Information</h3>
+                    </div>
+                    <table class="data-table">
+                      <tr>
+                        <td class="label">Meter No</td>
+                        <td class="value">016332</td>
+                        <td class="label">Tariff</td>
+                        <td class="value">LT-A</td>
+                        <td class="label">BS Type</td>
+                        <td class="value">11</td>
+                      </tr>
+                      <tr>
+                        <td class="label">Status</td>
+                        <td class="value">05</td>
+                        <td class="label">SP Code</td>
+                        <td class="value">00</td>
+                        <td class="label">Type</td>
+                        <td class="value">01</td>
+                      </tr>
+                      <tr>
+                        <td class="label">Connection</td>
+                        <td class="value">13</td>
+                        <td class="label">OMF</td>
+                        <td class="value">1.00</td>
+                        <td class="label">S.Load (kW)</td>
+                        <td class="value">1.00</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="readings-charges-row">
+                    <div class="table-section readings-section">
+                      <div class="section-header">
+                        <div class="section-icon">📊</div>
+                        <h3>Meter Readings</h3>
+                      </div>
+                      <table class="data-table">
+                        <tr>
+                          <td class="label">Present Date</td>
+                          <td class="value">26/10/21</td>
+                          <td class="label">Present RDG</td>
+                          <td class="value">0</td>
+                        </tr>
+                        <tr>
+                          <td class="label">Previous Date</td>
+                          <td class="value">27/09/21</td>
+                          <td class="label">Previous RDG</td>
+                          <td class="value">9930</td>
+                        </tr>
+                        <tr>
+                          <td class="label">Old Meter Unit</td>
+                          <td class="value">0</td>
+                          <td class="label">Consumed Unit</td>
+                          <td class="value">0</td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div class="table-section charges-section">
+                      <div class="section-header">
+                        <div class="section-icon">💰</div>
+                        <h3>Current Charges</h3>
+                      </div>
+                      <table class="data-table">
+                        <tr>
+                          <td class="label">Electricity Charge</td>
+                          <td class="value">৳200</td>
+                        </tr>
+                        <tr>
+                          <td class="label">Demand Charge</td>
+                          <td class="value">৳50</td>
+                        </tr>
+                        <tr>
+                          <td class="label">Adj. Principal</td>
+                          <td class="value">৳50</td>
+                        </tr>
+                        <tr>
+                          <td class="label">Total Bill</td>
+                          <td class="value">৳300</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="download-section">
+                <button class="download-btn" onclick="downloadPDF()">
+                  Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Average Bill Calculator Accordion -->
+        <div class="accordion-item">
+          <div
+            class="accordion-header"
+            onclick="toggleAccordion('average-bill')"
+          >
+            <span>📊 Average Bill Calculator</span>
+            <span class="accordion-icon">▼</span>
+          </div>
+          <div class="accordion-content" id="average-bill">
+            <div class="container">
+              <div class="header">
+                <div class="header-content">
+                  <div class="logo">⚡</div>
+                  <div class="bill-title">Average Bill Calculator</div>
+                  <div class="bill-subtitle">
+                    Estimate Your Monthly Electricity Consumption
+                  </div>
+                </div>
+              </div>
+
+              <div class="main-content">
+                <!-- Tariff Configuration -->
+                <div class="tariff-section">
+                  <h4
+                    style="margin-bottom: 20px; color: #1976d2; font-size: 16px"
+                  >
+                    ⚙️ Tariff Configuration
+                  </h4>
+                  <div class="tariff-grid">
+                    <div class="tariff-input">
+                      <label>Rate per kWh (৳)</label>
+                      <input
+                        type="number"
+                        id="tariffRate"
+                        value="6.50"
+                        step="0.01"
+                        min="0"
+                      />
+                    </div>
+                    <div class="tariff-input">
+                      <label>Fixed Charge (৳)</label>
+                      <input
+                        type="number"
+                        id="fixedCharge"
+                        value="50"
+                        step="1"
+                        min="0"
+                      />
+                    </div>
+                    <div class="tariff-input">
+                      <label>VAT (%)</label>
+                      <input
+                        type="number"
+                        id="vatRate"
+                        value="5"
+                        step="0.1"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Input Section -->
+                 <div class="app-container">
+        <!-- Appliances Table -->
+        <div class="appliances-table">
+            <div class="table-header">
+                <h2><i class="fas fa-home"></i> Home Appliances Control Center</h2>
+                <p>Manage and monitor all your electrical devices</p>
+            </div>
+
+            <div style="overflow-x: auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Appliances</th>
+                            <th>Brand</th>
+                            <th>Power (W)</th>
+                            <th>Qty</th>
+                            <th>Daily Avg Time Used (hrs)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appliancesTableBody">
+                        <!-- Appliances will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+                </div>
+
+                
+
+                <!-- Summary Section -->
+                <div class="summary-section">
+                  <div class="summary-card">
+                    <h4>Total Monthly Consumption</h4>
+                    <div class="summary-value" id="totalKWh">0</div>
+                    <div class="summary-unit">kWh</div>
+                  </div>
+                  <div class="summary-card">
+                    <h4>Estimated Monthly Bill</h4>
+                    <div class="summary-value" id="totalBill">৳0</div>
+                    <div class="summary-unit">including VAT</div>
+                  </div>
+                </div>
+
+                <div class="download-section">
+                  <button class="download-btn" onclick="generateReport()">
+                    📊 Generate Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Accordion functionality
+function toggleAccordion(sectionId) {
+    // Get all accordion items
+    const allAccordionContents = document.querySelectorAll(".accordion-content");
+    const allAccordionHeaders = document.querySelectorAll(".accordion-header");
+
+    // Close all accordion items
+    allAccordionContents.forEach((content) => {
+        content.classList.remove("active");
+    });
+    allAccordionHeaders.forEach((header) => {
+        header.classList.remove("active");
+    });
+
+    // Open the clicked accordion item
+    const targetContent = document.getElementById(sectionId);
+    const targetHeader = document.querySelector(`[onclick="toggleAccordion('${sectionId}')"]`);
+
+    if (targetContent && targetHeader) {
+        targetContent.classList.add("active");
+        targetHeader.classList.add("active");
+    }
+}
+
+// PDF download functionality
+function downloadPDF() {
+    // Show loading state
+    const btn = document.querySelector(".download-btn");
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "⏳ Generating PDF...";
+    btn.disabled = true;
+
+    // Hide the download section temporarily
+    const downloadSection = document.querySelector(".download-section");
+    downloadSection.style.display = "none";
+
+    const element = document.getElementById("billContent");
+
+    html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+    })
+    .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        pdf.save("electricity-bill-summary.pdf");
+
+        // Restore button and download section
+        downloadSection.style.display = "block";
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    })
+    .catch((error) => {
+        console.error("Error generating PDF:", error);
+        // Restore button and download section
+        downloadSection.style.display = "block";
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert("Error generating PDF. Please try again.");
+    });
+}
+
+// Page load animations
+document.addEventListener("DOMContentLoaded", function () {
+    // Smooth animations for sections
+    const sections = document.querySelectorAll(".table-section");
+    sections.forEach((section, index) => {
+        section.style.opacity = "0";
+        section.style.transform = "translateY(20px)";
+        setTimeout(() => {
+            section.style.transition = "all 0.5s ease";
+            section.style.opacity = "1";
+            section.style.transform = "translateY(0)";
+        }, index * 150);
+    });
+
+    // Generate appliances table
+    generateTableRows();
+});
+
+// Calculator functionality
+function updateSummary() {
+    const totalKWh = calculateTotalKWh();
+    const tariffRate = parseFloat(document.getElementById("tariffRate").value) || 6.5;
+    const fixedCharge = parseFloat(document.getElementById("fixedCharge").value) || 50;
+    const vatRate = parseFloat(document.getElementById("vatRate").value) || 5;
+
+    const electricityCharge = totalKWh * tariffRate;
+    const subtotal = electricityCharge + fixedCharge;
+    const vat = subtotal * (vatRate / 100);
+    const totalBill = subtotal + vat;
+
+    document.getElementById("totalKWh").textContent = totalKWh.toFixed(2);
+    document.getElementById("totalBill").textContent = `৳${totalBill.toFixed(2)}`;
+}
+
+// Calculate total kWh from appliances
+function calculateTotalKWh() {
+    let totalKWh = 0;
+    
+    Object.keys(applianceConfigs).forEach((id) => {
+        const powerInput = document.getElementById(`power-${id}`);
+        const quantityInput = document.getElementById(`quantity-${id}`);
+        const hoursInput = document.getElementById(`daily-hours-${id}`);
+        
+        if (powerInput && quantityInput && hoursInput) {
+            const power = parseFloat(powerInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+            const hours = parseFloat(hoursInput.value) || 0;
+            
+            if (power > 0 && quantity > 0 && hours > 0) {
+                totalKWh += (power / 1000) * hours * quantity * 30; // Convert W to kW and calculate monthly
+            }
+        }
+    });
+    
+    return totalKWh;
+}
+
+// Report generation
+function generateReport() {
+    const totalKWh = calculateTotalKWh();
+    
+    if (totalKWh === 0) {
+        alert("Please add at least one appliance to generate a report");
+        return;
+    }
+
+    const tariffRate = parseFloat(document.getElementById("tariffRate").value) || 6.5;
+    const fixedCharge = parseFloat(document.getElementById("fixedCharge").value) || 50;
+    const vatRate = parseFloat(document.getElementById("vatRate").value) || 5;
+
+    const electricityCharge = totalKWh * tariffRate;
+    const subtotal = electricityCharge + fixedCharge;
+    const vat = subtotal * (vatRate / 100);
+    const totalBill = subtotal + vat;
+
+    let report = `
+ELECTRICITY CONSUMPTION REPORT
+Generated on: ${new Date().toLocaleDateString()}
+
+APPLIANCES BREAKDOWN:
+${"=".repeat(50)}
+`;
+
+    // Add appliances to report
+    Object.keys(applianceConfigs).forEach((id) => {
+        const config = applianceConfigs[id];
+        const powerInput = document.getElementById(`power-${id}`);
+        const quantityInput = document.getElementById(`quantity-${id}`);
+        const hoursInput = document.getElementById(`daily-hours-${id}`);
+        
+        if (powerInput && quantityInput && hoursInput) {
+            const power = parseFloat(powerInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+            const hours = parseFloat(hoursInput.value) || 0;
+            
+            if (power > 0 && quantity > 0 && hours > 0) {
+                const monthlyKWh = (power / 1000) * hours * quantity * 30;
+                report += `
+${config.name}
+  Power: ${(power / 1000).toFixed(3)} kW
+  Daily Usage: ${hours.toFixed(1)} hours
+  Quantity: ${quantity}
+  Monthly Consumption: ${monthlyKWh.toFixed(2)} kWh
+  Monthly Cost: ৳${(monthlyKWh * tariffRate).toFixed(2)}
+${"─".repeat(30)}`;
+            }
+        }
+    });
+
+    report += `
+
+BILL SUMMARY:
+${"=".repeat(50)}
+Total Monthly Consumption: ${totalKWh.toFixed(2)} kWh
+Electricity Charge: ৳${electricityCharge.toFixed(2)}
+Fixed Charge: ৳${fixedCharge.toFixed(2)}
+Subtotal: ৳${subtotal.toFixed(2)}
+VAT (${vatRate}%): ৳${vat.toFixed(2)}
+Total Bill: ৳${totalBill.toFixed(2)}
+
+TARIFF INFORMATION:
+Rate per kWh: ৳${tariffRate.toFixed(2)}
+Fixed Charge: ৳${fixedCharge.toFixed(2)}
+VAT Rate: ${vatRate}%
+`;
+
+    const blob = new Blob([report], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `electricity-report-${new Date().toISOString().split("T")[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Event listeners for tariff changes
+document.addEventListener("DOMContentLoaded", function() {
+    // Update summary when tariff values change
+    const tariffRate = document.getElementById("tariffRate");
+    const fixedCharge = document.getElementById("fixedCharge");
+    const vatRate = document.getElementById("vatRate");
+    
+    if (tariffRate) tariffRate.addEventListener("input", updateSummary);
+    if (fixedCharge) fixedCharge.addEventListener("input", updateSummary);
+    if (vatRate) vatRate.addEventListener("input", updateSummary);
+    
+    // Update summary when appliance inputs change
+    Object.keys(applianceConfigs).forEach((id) => {
+        const powerInput = document.getElementById(`power-${id}`);
+        const quantityInput = document.getElementById(`quantity-${id}`);
+        const hoursInput = document.getElementById(`daily-hours-${id}`);
+        
+        if (powerInput) powerInput.addEventListener("input", updateSummary);
+        if (quantityInput) quantityInput.addEventListener("input", updateSummary);
+        if (hoursInput) hoursInput.addEventListener("input", updateSummary);
+    });
+});
+
+// Appliance configurations
+const applianceConfigs = {
+    ac: {
+        name: "Air Conditioner",
+        description: "Split AC - Inverter",
+        icon: "fas fa-snowflake",
+        iconClass: "ac",
+        brands: ["Daikin", "LG", "Samsung", "Carrier", "Mitsubishi", "Panasonic", "Hitachi", "Voltas", "Godrej", "Whirlpool"],
+        powerOptions: [
+            { label: "1 Ton", value: 1000 },
+            { label: "1.5 Ton", value: 1500 },
+            { label: "2 Ton", value: 2000 },
+            { label: "2.5 Ton", value: 2500 },
+            { label: "3 Ton", value: 3000 },
+        ],
+        maxQuantity: 5,
+        hasCustomPower: false,
+    },
+    fridge: {
+        name: "Refrigerator",
+        description: "Double Door - 5 Star",
+        icon: "fas fa-cube",
+        iconClass: "fridge",
+        brands: ["LG", "Samsung", "Whirlpool", "Godrej", "Haier", "Bosch", "Panasonic", "Electrolux", "Hitachi", "Walton"],
+        powerRange: { min: 50, max: 500 },
+        maxQuantity: 3,
+        hasCustomPower: true,
+    },
+    fan: {
+        name: "Ceiling Fan",
+        description: "5 Star Energy Rating",
+        icon: "fas fa-fan",
+        iconClass: "fan",
+        brands: ["Bajaj", "Crompton", "Usha", "Orient", "Havells", "Khaitan", "Luminous", "Atomberg", "Superfan", "Walton"],
+        powerRange: { min: 20, max: 150 },
+        maxQuantity: 10,
+        hasCustomPower: true,
+    },
+    tv: {
+        name: "Television",
+        description: "Smart LED TV",
+        icon: "fas fa-tv",
+        iconClass: "tv",
+        brands: ["Samsung", "LG", "Sony", "TCL", "Hisense", "Mi", "OnePlus", "Panasonic", "Walton", "Singer"],
+        powerRange: { min: 80, max: 400 },
+        maxQuantity: 5,
+        hasCustomPower: true,
+    },
+    washing: {
+        name: "Washing Machine",
+        description: "Front Load - Automatic",
+        icon: "fas fa-tshirt",
+        iconClass: "washing",
+        brands: ["LG", "Samsung", "Whirlpool", "Bosch", "IFB", "Haier", "Godrej", "Panasonic", "Walton", "Singer"],
+        powerRange: { min: 500, max: 2500 },
+        maxQuantity: 2,
+        hasCustomPower: true,
+    },
+    microwave: {
+        name: "Microwave Oven",
+        description: "Convection Oven",
+        icon: "fas fa-fire",
+        iconClass: "microwave",
+        brands: ["LG", "Samsung", "Panasonic", "Whirlpool", "IFB", "Godrej", "Bajaj", "Morphy Richards", "Walton", "Sharp"],
+        powerRange: { min: 700, max: 2000 },
+        maxQuantity: 2,
+        hasCustomPower: true,
+    },
+    kettle: {
+        name: "Electric Kettle",
+        description: "Stainless Steel",
+        icon: "fas fa-coffee",
+        iconClass: "kettle",
+        brands: ["Philips", "Morphy Richards", "Prestige", "Bajaj", "Havells", "Butterfly", "Singer", "Walton", "Russell Hobbs", "Tefal"],
+        powerRange: { min: 1000, max: 3000 },
+        maxQuantity: 3,
+        hasCustomPower: true,
+    },
+    heater: {
+        name: "Water Heater",
+        description: "Electric Geyser",
+        icon: "fas fa-shower",
+        iconClass: "heater",
+        brands: ["Racold", "AO Smith", "Bajaj", "Havells", "Venus", "Crompton", "V-Guard", "Walton", "Singer", "Whirlpool"],
+        powerRange: { min: 1000, max: 4000 },
+        maxQuantity: 3,
+        hasCustomPower: true,
+    },
+    light: {
+        name: "Light Bulbs",
+        description: "LED - Energy Saver",
+        icon: "fas fa-lightbulb",
+        iconClass: "light",
+        brands: ["Philips", "Osram", "Syska", "Wipro", "Bajaj", "Havells", "Crompton", "Orient", "Walton", "Singer"],
+        powerRange: { min: 5, max: 100 },
+        maxQuantity: 20,
+        hasCustomPower: true,
+    },
+    iron: {
+        name: "Electric Iron",
+        description: "Steam Iron",
+        icon: "fas fa-tshirt",
+        iconClass: "iron",
+        brands: ["Philips", "Morphy Richards", "Bajaj", "Havells", "Prestige", "Usha", "Crompton", "Singer", "Walton", "Black+Decker"],
+        powerRange: { min: 1000, max: 2400 },
+        maxQuantity: 2,
+        hasCustomPower: true,
+    },
+    vacuum: {
+        name: "Vacuum Cleaner",
+        description: "Bagless Cyclonic",
+        icon: "fas fa-broom",
+        iconClass: "vacuum",
+        brands: ["Dyson", "Philips", "Eureka Forbes", "Black+Decker", "Karcher", "Inalsa", "Kent", "Singer", "Walton", "Bissell"],
+        powerRange: { min: 1000, max: 2200 },
+        maxQuantity: 2,
+        hasCustomPower: true,
+    },
+    blender: {
+        name: "Blender",
+        description: "High Speed Mixer",
+        icon: "fas fa-blender",
+        iconClass: "blender",
+        brands: ["Philips", "Preethi", "Butterfly", "Bajaj", "Power Guard", "Panasonic", "Usha", "Singer", "Walton", "Inalsa"],
+        powerRange: { min: 500, max: 1500 },
+        maxQuantity: 2,
+        hasCustomPower: true,
+    },
+    dryer: {
+        name: "Hair Dryer",
+        description: "Professional Ionic",
+        icon: "fas fa-wind",
+        iconClass: "dryer",
+        brands: ["Philips", "Dyson", "Havells", "Nova", "Kemei", "Vega", "Conair", "Singer", "Walton", "Braun"],
+        powerRange: { min: 1000, max: 2400 },
+        maxQuantity: 3,
+        hasCustomPower: true,
+    },
+};
+
+// Generate table rows for appliances
+function generateTableRows() {
+    const tbody = document.getElementById("appliancesTableBody");
+    if (!tbody) return;
+    
+    tbody.innerHTML = "";
+
+    Object.keys(applianceConfigs).forEach((id) => {
+        const config = applianceConfigs[id];
+        const row = document.createElement("tr");
+        row.setAttribute("data-appliance", id);
+
+        row.innerHTML = `
+            <td>
+                <div class="device-info">
+                    <div class="device-icon ${config.iconClass}">
+                        <i class="${config.icon}"></i>
+                    </div>
+                    <div class="device-details">
+                        <h4>${config.name}</h4>
+                        <p>${config.description}</p>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <select id="brand-${id}">
+                    <option value="">Select Brand</option>
+                    ${config.brands.map(brand => `<option value="${brand.toLowerCase()}">${brand}</option>`).join("")}
+                </select>
+            </td>
+            <td>
+                ${config.hasCustomPower 
+                    ? `<input type="number" id="power-${id}" placeholder="Watts" min="${config.powerRange.min}" max="${config.powerRange.max}" />`
+                    : `<select id="power-${id}">
+                        <option value="">Select</option>
+                        ${config.powerOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join("")}
+                    </select>`
+                }
+            </td>
+            <td>
+                <input type="number" id="quantity-${id}" min="1" max="${config.maxQuantity}" value="1" />
+            </td>
+            <td>
+                <input type="number" id="daily-hours-${id}" placeholder="Hours" min="0" max="24" step="0.5" />
+            </td>
+        `;
+
+        tbody.appendChild(row);
+    });
+}
+    </script>
+  </body>
+</html>
+{% endblock %}

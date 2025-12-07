@@ -1,0 +1,204 @@
+{% extends "base.html" %} {% block title %}User Profile{% endblock %} {% block
+content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>User Profile Information</h1>
+    <a href="{{ url_for('views.edit_profile') }}" class="btn btn-primary"
+      >Edit Profile</a
+    >
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4>Personal Information</h4>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p>
+            <strong>Father's Name:</strong> {{ profile.fathers_name or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>Mother's Name:</strong> {{ profile.mothers_name or 'Not
+            provided' }}
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <p>
+            <strong>Date of Birth:</strong> {{ profile.date_of_birth or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p><strong>Phone:</strong> {{ profile.phone or 'Not provided' }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>NID Number:</strong> {{ profile.nid_number or 'Not provided'
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p>
+            <strong>Guardian's Name:</strong> {{ profile.guardians_name or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>Guardian's Phone:</strong> {{ profile.guardians_phone or
+            'Not provided' }}
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6"></div>
+        <div class="col-md-6"></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <p>
+            <strong>Blood Group:</strong> {{ profile.blood_group or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-3">
+          <p>
+            <strong>Religion:</strong> {{ profile.religion or 'Not provided' }}
+          </p>
+        </div>
+        <div class="col-md-3">
+          <p>
+            <strong>Nationality:</strong> {{ profile.nationality or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-3">
+          <p><strong>Gender:</strong> {{ profile.gender or 'Not provided' }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <p>
+            <strong>Marital Status:</strong> {{ profile.marital_status or 'Not
+            provided' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4>Present Address</h4>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <p>
+            <strong>Division:</strong> {{ profile.present_division or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>District:</strong> {{ profile.present_district or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>Upazilla:</strong> {{ profile.present_upazilla or 'Not
+            provided' }}
+          </p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <p>
+            <strong>Post Office:</strong> {{ profile.present_post_office or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>Village:</strong> {{ profile.present_village or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>House Name:</strong> {{ profile.present_house_name or 'Not
+            provided' }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            <strong>House No:</strong> {{ profile.present_house_no or 'Not
+            provided' }}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>Road No:</strong> {{ profile.present_road_no or 'Not
+            provided' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h4>Energy Meter Information</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <p>
+              <strong>Meter ID:</strong> {{ profile.meter_id or 'Not provided'
+              }}
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p>
+              <strong>Connection Type:</strong> {{ profile.connection_type or
+              'Not provided' }}
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p>
+              <strong>Phone No.</strong> {{ profile.phone_no or 'Not provided'
+              }}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <p>
+              <strong>Low Balance Allert:</strong> {{ profile.installation_date
+              or 'Not provided' }}
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p>
+              <strong>Supply Voltage:</strong> {{ profile.supply_voltage or 'Not
+              provided' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

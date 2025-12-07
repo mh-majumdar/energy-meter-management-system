@@ -1,0 +1,302 @@
+.btn {
+  background-color: rgb(230, 159, 8);
+  border: none;
+  border-radius: 0.6rem;
+  box-shadow: 0.1rem 0.1rem 0.1rem #222;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: "Rubik" sens sar;
+  padding: 1rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  margin-top: 2.5rem;
+  font-size:12px;
+  font-weight: 500;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4rem;
+  /* margin-left: 18rem; */
+}
+
+
+/* header  starts  here  */
+
+.banner {
+  display: flex;
+  padding: 0rem;
+  min-height: 2vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top:2rem;
+}
+
+.article {
+  flex-basis: 50%;
+}
+
+.article col-md-4 {
+  color: #42e91dd1;
+  font-size:30px;
+  font-weight: 500;
+  align-items: center;
+
+}
+
+.description {
+  padding-top: 1rem;
+  font-size: 18px;
+}
+
+
+.banner-photo {
+  min-width: 1vh;
+  width: 55rem;
+  box-shadow: 0.3rem solid black;
+  flex-basis: 40%;
+  padding: 2rem;
+}
+
+/* Style for the banner */
+.banner {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-top: 0px;
+}
+
+/* Elliptical shape for the title */
+.article .title {
+display: inline-block;
+padding: 10px 20px;
+background-color: #133267; /* Bootstrap primary blue */
+color: white;
+font-weight: bold;
+border-radius: 50px; /* Elliptical shape */
+text-align: center;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+font-size:20px;
+}
+
+/* Description styling */
+.article .description {
+margin-top: 15px;
+font-size: 1rem;
+color: #000000;
+}
+
+/* Animation for article */
+.article {
+opacity: 0; /* Initially hidden */
+transform: translateX(-100%); /* Positioned off-screen to the left */
+animation: slideIn 1s ease-out forwards; /* Slide-in animation */
+}
+
+/* Keyframes for slide-in animation */
+@keyframes slideIn {
+from {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+to {
+    opacity: 1;
+    transform: translateX(0);
+}
+}
+/* banner end here here  */
+
+/* Base styles for all devices */
+.banner-photo {
+max-width: 100%;
+height: auto;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for better emphasis */
+}
+
+.title {
+font-size: 1.8rem;
+font-weight: bold;
+color: #003366; /* A darker shade of blue */
+margin-bottom: 1rem;
+}
+
+.description {
+font-size: 1rem;
+line-height: 1.6;
+color: #333333; /* Neutral text color */
+margin-bottom: 1rem;
+}
+
+
+.header-banner {
+  background-color: #193366;
+  color: white;
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.features-container {
+  background-color: #193366;
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+}
+
+.feature-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  height: 100%;
+}
+
+.feature-title {
+  color: #193366;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.feature-text {
+  color: #333;
+  font-size: 1.1rem;
+  text-align: justify;
+}
+
+.action-button {
+  background-color: #f7a81b;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  padding: 8px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.action-button:hover {
+  background-color: #e09200;
+}
+
+/* keyrules starts here  */
+
+
+.rule-heading {
+font-size: 20px;
+color: white; /* Set text color to white */
+font-weight: 500;
+padding: 10px 15px ; /* Sets padding: top, right, bottom, left */
+background-color: #133267; /* Bootstrap primary blue */
+font-weight: bold;
+border-radius: 40px; /* Elliptical shape */
+text-align: center;
+overflow: hidden;
+text-overflow: ellipsis;
+
+}
+
+
+.carrier-content {
+display: flex;
+padding: 3rem;
+min-height: 5vh;
+align-items: center;
+justify-content: center;
+background-color:#133267;
+
+}
+
+.cp {
+padding-right: 5rem;
+text-align:justify;
+flex: 1;
+background-color: #ffffff;
+margin-right: 20px;
+border-radius: 10px;
+
+}
+
+
+
+.cp-title {
+font-size: 25px;
+color: #133267;
+font-weight: 500;
+margin-top: 1rem;
+padding-left: 5rem;
+}
+
+.cp-text {
+font-size: 50px;
+align-items: center;
+justify-content: center;
+color: red;
+}
+
+
+.writing {
+text-align:center;
+flex: 1;
+padding-right: 5rem;
+background-color: #fff;
+border-radius: 40px;
+
+}
+
+.writing-logo {
+width: 70px;
+}
+
+.writing-title {
+font-size: 25px;
+color: #133267;
+font-weight: 500;
+text-decoration: underline;
+padding-left: 3.5rem;
+margin-top: 1rem;
+}
+
+.writing-text {
+font-size: 20px;
+align-items: center;
+justify-content: center;
+}
+
+.photography {
+text-align: center;
+flex: 1;
+text-align: left;
+background-color: #fff;
+margin-left: 20px;
+border-radius: 40px;
+}
+
+
+
+.camera-title {
+font-size: 25px;
+color: #133267;
+font-weight: 500;
+text-decoration: underline;
+padding-left: 3.5rem;
+
+
+}
+
+.camera-text {
+font-size: 20px;
+text-align: left;
+
+}
+
+
+
+
+/* carrier ends here  */

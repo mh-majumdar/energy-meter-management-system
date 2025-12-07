@@ -1,0 +1,181 @@
+
+/* General Navbar Styling */
+.custom-navbar {
+  background-color: #133267; /* Change to your desired color */
+  color: white; /* Optional: Adjust text color */
+}
+body {
+  font-family: 'Roboto', sans-serif;
+    /* Optional: You can set a default font size */
+}
+
+.navbar {
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  color:#000000;
+}
+
+/* Nav Links */
+.nav-link {
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #f8f9fa; /* Slightly lighter than white */
+  text-decoration: underline;
+}
+
+/* Search Input */
+.form-control {
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-light {
+  border-radius: 30px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-light:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.banner {
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.article .title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #007bff; /* Optional: Add some color */
+}
+
+.article .description {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.banner-photo {
+  max-width: 45rem;
+  height: auto;
+  border-radius: 8px; /* Optional: Add rounded corners to the image */
+}
+
+
+ /* sidebar starts */
+ body {
+  background-color: #fbfbfb;
+}
+@media (min-width: 991.98px) {
+  main {
+    padding-left: 240px;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 58px 0 0; /* Height of navbar */
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+  z-index: 600;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+/* sidebar ends */
+
+
+
+
+
+/* Footer Styling */
+.footer {
+  border-top: 2px solid #f72020;
+  margin-top: 1rem;
+  background-color:#133267 ;
+}
+
+.footer h5 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.footer p, .footer a {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #f8f9fa;
+  text-decoration: underline;
+}
+
+/* Social Icons */
+.social-icons a {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+  color: #f8f9fa;
+}
+/* footer ends here */
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .banner {
+      padding: 20px; /* Add padding for smaller screens */
+  }
+
+  .title {
+      font-size: 1.5rem; /* Slightly smaller title on mobile */
+      text-align: center; /* Center align the title for better aesthetics */
+      padding-left: 2rem;
+      margin-left: 2rem;
+  }
+
+  .description {
+      font-size: 0.9rem; /* Slightly smaller font size */
+      text-align: justify; /* Align text for better readability */
+      padding-left: 2rem;
+  }
+
+  .article {
+      margin-bottom: 20px; /* Add spacing below the article */
+  }
+
+  .banner-photo {
+      margin-top: 15px; /* Add margin above the image */
+  }
+}
+
+

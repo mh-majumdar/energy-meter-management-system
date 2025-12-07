@@ -1,0 +1,879 @@
+{% extends "base.html" %} {% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Realtime Enerey Dashboard</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='components.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1><i class="fas fa-bolt"></i> Realtime Enerey Dashboard</h1>
+        <p>Professional monitoring and control of all home appliances</p>
+      </div>
+
+      <!-- Overview Cards -->
+      <div class="overview">
+        <div class="overview-card">
+          <div class="overview-value" id="totalPower">0.00</div>
+          <div class="overview-label">Running Power (kW)</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-value" id="totalCost">৳0.00</div>
+          <div class="overview-label">Running Cost</div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-value" id="activeDevices">0</div>
+          <div class="overview-label">Active Appliances</div>
+        </div>
+        <div class="overview-card">
+          <div class="overview-value" id="avgPower">0.00</div>
+          <div class="overview-label">Running Avg Power (W)</div>
+        </div>
+      </div>
+
+      <!-- Appliances Table -->
+      <div class="appliances-table">
+        <div class="table-header">
+          <h2><i class="fas fa-home"></i> Home Appliances Control Center</h2>
+          <p>Manage and monitor all your electrical devices in real-time</p>
+        </div>
+
+        <div style="overflow-x: auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Appliances</th>
+                <th>Brand</th>
+                <th>Power (W)</th>
+                <th>Qty</th>
+                <th>Status</th>
+                <th>Runtime</th>
+                <th>Current (W)</th>
+                <th>Energy (kWh)</th>
+                <th>Cost (৳)</th>
+              </tr>
+            </thead>
+            <tbody id="appliancesTableBody">
+              <!-- Appliances will be dynamically inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Appliance configurations
+      // Appliance configurations
+      const applianceConfigs = {
+        ac: {
+          name: "Air Conditioner",
+          description: "Split AC - Inverter",
+          icon: "fas fa-snowflake",
+          iconClass: "ac",
+          brands: [
+            "Daikin",
+            "LG",
+            "Samsung",
+            "Carrier",
+            "Mitsubishi",
+            "Panasonic",
+            "Hitachi",
+            "Voltas",
+            "Godrej",
+            "Whirlpool",
+          ],
+          powerOptions: [
+            { label: "1 Ton", value: 1000 },
+            { label: "1.5 Ton", value: 1500 },
+            { label: "2 Ton", value: 2000 },
+            { label: "2.5 Ton", value: 2500 },
+            { label: "3 Ton", value: 3000 },
+          ],
+          maxQuantity: 5,
+          hasCustomPower: false,
+        },
+        fridge: {
+          name: "Refrigerator",
+          description: "Double Door - 5 Star",
+          icon: "fas fa-cube",
+          iconClass: "fridge",
+          brands: [
+            "LG",
+            "Samsung",
+            "Whirlpool",
+            "Godrej",
+            "Haier",
+            "Bosch",
+            "Panasonic",
+            "Electrolux",
+            "Hitachi",
+            "Walton",
+          ],
+          powerRange: { min: 50, max: 500 },
+          maxQuantity: 3,
+          hasCustomPower: true,
+        },
+        fan: {
+          name: "Ceiling Fan",
+          description: "5 Star Energy Rating",
+          icon: "fas fa-fan",
+          iconClass: "fan",
+          brands: [
+            "Bajaj",
+            "Crompton",
+            "Usha",
+            "Orient",
+            "Havells",
+            "Khaitan",
+            "Luminous",
+            "Atomberg",
+            "Superfan",
+            "Walton",
+          ],
+          powerRange: { min: 20, max: 150 },
+          maxQuantity: 10,
+          hasCustomPower: true,
+        },
+        tv: {
+          name: "Television",
+          description: "Smart LED TV",
+          icon: "fas fa-tv",
+          iconClass: "tv",
+          brands: [
+            "Samsung",
+            "LG",
+            "Sony",
+            "TCL",
+            "Hisense",
+            "Mi",
+            "OnePlus",
+            "Panasonic",
+            "Walton",
+            "Singer",
+          ],
+          powerRange: { min: 80, max: 400 },
+          maxQuantity: 5,
+          hasCustomPower: true,
+        },
+        washing: {
+          name: "Washing Machine",
+          description: "Front Load - Automatic",
+          icon: "fas fa-tshirt",
+          iconClass: "washing",
+          brands: [
+            "LG",
+            "Samsung",
+            "Whirlpool",
+            "Bosch",
+            "IFB",
+            "Haier",
+            "Godrej",
+            "Panasonic",
+            "Walton",
+            "Singer",
+          ],
+          powerRange: { min: 500, max: 2500 },
+          maxQuantity: 2,
+          hasCustomPower: true,
+        },
+        microwave: {
+          name: "Microwave Oven",
+          description: "Convection Oven",
+          icon: "fas fa-fire",
+          iconClass: "microwave",
+          brands: [
+            "LG",
+            "Samsung",
+            "Panasonic",
+            "Whirlpool",
+            "IFB",
+            "Godrej",
+            "Bajaj",
+            "Morphy Richards",
+            "Walton",
+            "Sharp",
+          ],
+          powerRange: { min: 700, max: 2000 },
+          maxQuantity: 2,
+          hasCustomPower: true,
+        },
+        kettle: {
+          name: "Electric Kettle",
+          description: "Stainless Steel",
+          icon: "fas fa-coffee",
+          iconClass: "kettle",
+          brands: [
+            "Philips",
+            "Morphy Richards",
+            "Prestige",
+            "Bajaj",
+            "Havells",
+            "Butterfly",
+            "Singer",
+            "Walton",
+            "Russell Hobbs",
+            "Tefal",
+          ],
+          powerRange: { min: 1000, max: 3000 },
+          maxQuantity: 3,
+          hasCustomPower: true,
+        },
+        heater: {
+          name: "Water Heater",
+          description: "Electric Geyser",
+          icon: "fas fa-shower",
+          iconClass: "heater",
+          brands: [
+            "Racold",
+            "AO Smith",
+            "Bajaj",
+            "Havells",
+            "Venus",
+            "Crompton",
+            "V-Guard",
+            "Walton",
+            "Singer",
+            "Whirlpool",
+          ],
+          powerRange: { min: 1000, max: 4000 },
+          maxQuantity: 3,
+          hasCustomPower: true,
+        },
+        light: {
+          name: "Light Bulbs",
+          description: "LED - Energy Saver",
+          icon: "fas fa-lightbulb",
+          iconClass: "light",
+          brands: [
+            "Philips",
+            "Osram",
+            "Syska",
+            "Wipro",
+            "Bajaj",
+            "Havells",
+            "Crompton",
+            "Orient",
+            "Walton",
+            "Singer",
+          ],
+          powerRange: { min: 5, max: 100 },
+          maxQuantity: 20,
+          hasCustomPower: true,
+        },
+        iron: {
+          name: "Electric Iron",
+          description: "Steam Iron",
+          icon: "fas fa-tshirt",
+          iconClass: "iron",
+          brands: [
+            "Philips",
+            "Morphy Richards",
+            "Bajaj",
+            "Havells",
+            "Prestige",
+            "Usha",
+            "Crompton",
+            "Singer",
+            "Walton",
+            "Black+Decker",
+          ],
+          powerRange: { min: 1000, max: 2400 },
+          maxQuantity: 2,
+          hasCustomPower: true,
+        },
+        vacuum: {
+          name: "Vacuum Cleaner",
+          description: "Bagless Cyclonic",
+          icon: "fas fa-broom",
+          iconClass: "vacuum",
+          brands: [
+            "Dyson",
+            "Philips",
+            "Eureka Forbes",
+            "Black+Decker",
+            "Karcher",
+            "Inalsa",
+            "Kent",
+            "Singer",
+            "Walton",
+            "Bissell",
+          ],
+          powerRange: { min: 1000, max: 2200 },
+          maxQuantity: 2,
+          hasCustomPower: true,
+        },
+        blender: {
+          name: "Blender",
+          description: "High Speed Mixer",
+          icon: "fas fa-blender",
+          iconClass: "blender",
+          brands: [
+            "Philips",
+            "Preethi",
+            "Butterfly",
+            "Bajaj",
+            "Power Guard",
+            "Panasonic",
+            "Usha",
+            "Singer",
+            "Walton",
+            "Inalsa",
+          ],
+          powerRange: { min: 500, max: 1500 },
+          maxQuantity: 2,
+          hasCustomPower: true,
+        },
+        dryer: {
+          name: "Hair Dryer",
+          description: "Professional Ionic",
+          icon: "fas fa-wind",
+          iconClass: "dryer",
+          brands: [
+            "Philips",
+            "Dyson",
+            "Havells",
+            "Nova",
+            "Kemei",
+            "Vega",
+            "Conair",
+            "Singer",
+            "Walton",
+            "Braun",
+          ],
+          powerRange: { min: 1000, max: 2400 },
+          maxQuantity: 3,
+          hasCustomPower: true,
+        },
+      };
+
+      // Global state
+      const appliances = {};
+      const RATE_PER_KWH = 8.5;
+      let peakPower = 0;
+      let lastUpdateTime = Date.now();
+
+      // Initialize appliances
+      Object.keys(applianceConfigs).forEach((id) => {
+        appliances[id] = {
+          power: 0,
+          quantity: 1,
+          energy: 0,
+          cost: 0,
+          active: false,
+          startTime: null,
+          brand: "",
+          powerSetting: 0,
+          lastUpdateTime: null,
+        };
+      });
+
+      // Generate table rows
+      function generateTableRows() {
+        const tbody = document.getElementById("appliancesTableBody");
+        tbody.innerHTML = "";
+
+        Object.keys(applianceConfigs).forEach((id) => {
+          const config = applianceConfigs[id];
+          const row = document.createElement("tr");
+          row.setAttribute("data-appliance", id);
+
+          row.innerHTML = `
+            <td>
+                <div class="device-info">
+                    <div class="device-icon ${config.iconClass}">
+                        <i class="${config.icon}"></i>
+                    </div>
+                    <div class="device-details">
+                        <h4>${config.name}</h4>
+                        <p>${config.description}</p>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <select id="brand-${id}" onchange="updateAppliance('${id}')">
+                    <option value="">Select Brand</option>
+                    ${config.brands
+                      .map(
+                        (brand) =>
+                          `<option value="${brand.toLowerCase()}">${brand}</option>`
+                      )
+                      .join("")}
+                </select>
+            </td>
+            <td>
+                ${
+                  config.hasCustomPower
+                    ? `<input type="number" id="power-${id}" placeholder="Watts" min="${config.powerRange.min}" max="${config.powerRange.max}" onchange="updateAppliance('${id}')" />`
+                    : `<select id="power-${id}" onchange="updateAppliance('${id}')">
+                        <option value="">Select</option>
+                        ${config.powerOptions
+                          .map(
+                            (option) =>
+                              `<option value="${option.value}">${option.label}</option>`
+                          )
+                          .join("")}
+                    </select>`
+                }
+            </td>
+            <td>
+                <input type="number" id="quantity-${id}" min="1" max="${
+            config.maxQuantity
+          }" value="1" onchange="updateAppliance('${id}')" />
+            </td>
+            <td>
+                <label class="toggle-switch">
+                    <input type="checkbox" onchange="toggleAppliance('${id}', this)" />
+                    <span class="slider"></span>
+                </label>
+            </td>
+            <td>
+                <div class="timer" id="timer-${id}">00:00:00</div>
+            </td>
+            <td>
+                <div class="stat-value power" id="current-power-${id}">0.00</div>
+            </td>
+            <td>
+                <div class="stat-value energy" id="energy-${id}">0.000</div>
+            </td>
+            <td>
+                <div class="stat-value cost" id="cost-${id}">৳0.00</div>
+            </td>
+        `;
+
+          tbody.appendChild(row);
+        });
+      }
+
+      // Update appliance settings
+      function updateAppliance(applianceId) {
+        const appliance = appliances[applianceId];
+        const brand = document.getElementById(`brand-${applianceId}`).value;
+        const quantity =
+          parseInt(document.getElementById(`quantity-${applianceId}`).value) ||
+          1;
+        const powerSetting =
+          parseInt(document.getElementById(`power-${applianceId}`).value) || 0;
+
+        appliance.brand = brand;
+        appliance.quantity = quantity;
+        appliance.powerSetting = powerSetting;
+        appliance.power = powerSetting * quantity;
+
+        updateDisplay();
+      }
+
+      // Toggle appliance on/off
+      function toggleAppliance(applianceId, checkbox) {
+        const appliance = appliances[applianceId];
+        const row = document.querySelector(`[data-appliance="${applianceId}"]`);
+        const icon = row.querySelector(".device-icon");
+
+        if (checkbox.checked) {
+          if (appliance.power === 0) {
+            alert("Please set the power consumption first!");
+            checkbox.checked = false;
+            return;
+          }
+
+          appliance.active = true;
+          appliance.startTime = Date.now();
+          appliance.lastUpdateTime = Date.now();
+          row.classList.add("active");
+          icon.classList.add("active");
+        } else {
+          appliance.active = false;
+          appliance.startTime = null;
+          appliance.lastUpdateTime = null;
+          row.classList.remove("active");
+          icon.classList.remove("active");
+          document.getElementById(`timer-${applianceId}`).textContent =
+            "00:00:00";
+        }
+        updateDisplay();
+      }
+
+      // Control functions
+      function turnOnAll() {
+        if (confirm("Turn on all configured appliances?")) {
+          Object.keys(appliances).forEach((id) => {
+            if (appliances[id].power > 0) {
+              const checkbox = document.querySelector(
+                `[data-appliance="${id}"] input[type="checkbox"]`
+              );
+              if (!checkbox.checked) {
+                checkbox.checked = true;
+                toggleAppliance(id, checkbox);
+              }
+            }
+          });
+        }
+      }
+
+      function turnOffAll() {
+        if (confirm("Turn off all appliances?")) {
+          Object.keys(appliances).forEach((id) => {
+            const checkbox = document.querySelector(
+              `[data-appliance="${id}"] input[type="checkbox"]`
+            );
+            if (checkbox.checked) {
+              checkbox.checked = false;
+              toggleAppliance(id, checkbox);
+            }
+          });
+        }
+      }
+
+      function resetEnergy() {
+        if (confirm("Reset all energy consumption data?")) {
+          Object.keys(appliances).forEach((id) => {
+            appliances[id].energy = 0;
+            appliances[id].cost = 0;
+          });
+          peakPower = 0;
+          updateDisplay();
+        }
+      }
+
+      function exportData() {
+        const data = {
+          timestamp: new Date().toISOString(),
+          appliances: appliances,
+          summary: {
+            totalPower: Object.values(appliances).reduce(
+              (sum, app) => sum + (app.active ? app.power : 0),
+              0
+            ),
+            totalEnergy: Object.values(appliances).reduce(
+              (sum, app) => sum + app.energy,
+              0
+            ),
+            totalCost: Object.values(appliances).reduce(
+              (sum, app) => sum + app.cost,
+              0
+            ),
+            activeDevices: Object.values(appliances).filter((app) => app.active)
+              .length,
+            peakPower: peakPower,
+          },
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `energy-data-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // Format time display
+      function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      }
+
+      // Update individual appliance display
+      function updateApplianceDisplay(applianceId) {
+        const appliance = appliances[applianceId];
+
+        // Update current power display
+        document.getElementById(`current-power-${applianceId}`).textContent =
+          appliance.active ? appliance.power.toFixed(2) : "0.00";
+
+        // Update energy display
+        document.getElementById(`energy-${applianceId}`).textContent =
+          appliance.energy.toFixed(3);
+
+        // Update cost display
+        document.getElementById(
+          `cost-${applianceId}`
+        ).textContent = `৳${appliance.cost.toFixed(2)}`;
+
+        // Update timer display
+        if (appliance.active && appliance.startTime) {
+          const elapsedSeconds = Math.floor(
+            (Date.now() - appliance.startTime) / 1000
+          );
+          document.getElementById(`timer-${applianceId}`).textContent =
+            formatTime(elapsedSeconds);
+        }
+      }
+
+      // Update overview display - FIXED VERSION
+      function updateOverview() {
+        let totalPower = 0;
+        let totalEnergy = 0;
+        let totalCost = 0;
+        let activeDevices = 0;
+
+        // Calculate totals
+        Object.values(appliances).forEach((appliance) => {
+          if (appliance.active) {
+            totalPower += appliance.power;
+            activeDevices++;
+          }
+          totalEnergy += appliance.energy;
+          totalCost += appliance.cost; // Sum of all actual costs from appliance table
+        });
+
+        // Update peak power
+        if (totalPower > peakPower) {
+          peakPower = totalPower;
+        }
+
+        // Update overview displays
+        document.getElementById("totalPower").textContent = (
+          totalPower / 1000
+        ).toFixed(2);
+        document.getElementById(
+          "totalCost"
+        ).textContent = `৳${totalCost.toFixed(2)}`; // Show actual total cost
+        document.getElementById("activeDevices").textContent = activeDevices;
+        document.getElementById("avgPower").textContent =
+          activeDevices > 0 ? (totalPower / activeDevices).toFixed(2) : "0.00";
+      }
+
+      // Main update function
+      function updateDisplay() {
+        Object.keys(appliances).forEach((applianceId) => {
+          updateApplianceDisplay(applianceId);
+        });
+        updateOverview();
+      }
+
+      // Energy calculation and update
+      function updateEnergy() {
+        const currentTime = Date.now();
+
+        Object.keys(appliances).forEach((applianceId) => {
+          const appliance = appliances[applianceId];
+
+          if (appliance.active && appliance.lastUpdateTime) {
+            // Calculate energy consumed since last update
+            const timeElapsed =
+              (currentTime - appliance.lastUpdateTime) / 1000 / 3600; // Convert to hours
+            const energyConsumed = (appliance.power / 1000) * timeElapsed; // Convert to kWh
+
+            appliance.energy += energyConsumed;
+            appliance.cost = appliance.energy * RATE_PER_KWH;
+          }
+
+          // Update last update time for active appliances
+          if (appliance.active) {
+            appliance.lastUpdateTime = currentTime;
+          }
+        });
+
+        updateDisplay();
+      }
+
+      // Notification system
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    `;
+
+        switch (type) {
+          case "success":
+            notification.style.background =
+              "linear-gradient(135deg, #27ae60, #2ecc71)";
+            break;
+          case "error":
+            notification.style.background =
+              "linear-gradient(135deg, #e74c3c, #c0392b)";
+            break;
+          case "warning":
+            notification.style.background =
+              "linear-gradient(135deg, #f39c12, #e67e22)";
+            break;
+          default:
+            notification.style.background =
+              "linear-gradient(135deg, #3498db, #2980b9)";
+        }
+
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease";
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      // Add CSS for notifications
+      const style = document.createElement("style");
+      style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+      document.head.appendChild(style);
+
+      // Auto-save to variables (localStorage equivalent)
+      let savedData = {};
+
+      function saveData() {
+        savedData = {
+          appliances: JSON.parse(JSON.stringify(appliances)),
+          peakPower: peakPower,
+          timestamp: Date.now(),
+        };
+      }
+
+      function loadData() {
+        if (savedData.appliances) {
+          Object.keys(savedData.appliances).forEach((id) => {
+            if (appliances[id]) {
+              // Restore non-runtime data
+              appliances[id].energy = savedData.appliances[id].energy || 0;
+              appliances[id].cost = savedData.appliances[id].cost || 0;
+              appliances[id].brand = savedData.appliances[id].brand || "";
+              appliances[id].powerSetting =
+                savedData.appliances[id].powerSetting || 0;
+              appliances[id].quantity = savedData.appliances[id].quantity || 1;
+              appliances[id].power = savedData.appliances[id].power || 0;
+
+              // Update UI elements
+              if (appliances[id].brand) {
+                document.getElementById(`brand-${id}`).value =
+                  appliances[id].brand;
+              }
+              if (appliances[id].powerSetting) {
+                document.getElementById(`power-${id}`).value =
+                  appliances[id].powerSetting;
+              }
+              document.getElementById(`quantity-${id}`).value =
+                appliances[id].quantity;
+            }
+          });
+          peakPower = savedData.peakPower || 0;
+          updateDisplay();
+        }
+      }
+
+      // High consumption warning
+      function checkHighConsumption() {
+        const totalPower = Object.values(appliances).reduce(
+          (sum, app) => sum + (app.active ? app.power : 0),
+          0
+        );
+
+        if (totalPower > 5000) {
+          // 5kW threshold
+          showNotification(
+            "High power consumption detected! Consider turning off some appliances.",
+            "warning"
+          );
+        }
+      }
+
+      // Initialize the dashboard
+      function initDashboard() {
+        generateTableRows();
+        loadData();
+        updateDisplay();
+
+        // Update energy consumption every second
+        setInterval(updateEnergy, 1000);
+
+        // Update display every 500ms for smooth timer updates
+        setInterval(updateDisplay, 500);
+
+        // Auto-save every 30 seconds
+        setInterval(saveData, 30000);
+
+        // Check for high consumption every 10 seconds
+        setInterval(checkHighConsumption, 10000);
+
+        // Show welcome message
+        setTimeout(() => {
+          showNotification(
+            "Smart Home Energy Dashboard initialized successfully!",
+            "success"
+          );
+        }, 1000);
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey || e.metaKey) {
+          switch (e.key) {
+            case "s":
+              e.preventDefault();
+              saveData();
+              showNotification("Data saved successfully!", "success");
+              break;
+            case "r":
+              e.preventDefault();
+              if (confirm("Reset all energy data?")) {
+                resetEnergy();
+                showNotification("Energy data reset!", "info");
+              }
+              break;
+            case "e":
+              e.preventDefault();
+              exportData();
+              showNotification("Data exported successfully!", "success");
+              break;
+          }
+        }
+      });
+
+      // Start dashboard when page loads
+      document.addEventListener("DOMContentLoaded", initDashboard);
+
+      // Handle page visibility change
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          saveData();
+        } else {
+          loadData();
+        }
+      });
+
+      // Handle before unload
+      window.addEventListener("beforeunload", function () {
+        saveData();
+      });
+    </script>
+  </body>
+</html>
+{% endblock %}

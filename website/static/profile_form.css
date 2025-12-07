@@ -1,0 +1,44 @@
+/* Improve input field visibility */
+.form-control {
+    border: 2px solid #133267; /* Highlight input borders */
+    border-radius: 8px; /* Add rounded corners */
+    padding: 10px; /* Increase padding for better visibility */
+    font-size: 16px; /* Make text inside input fields larger */
+    background-color: #f8f9fa; /* Light background for contrast */
+}
+
+/* Improve select dropdowns */
+.form-select {
+    border: 2px solid #133267;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f8f9fa;
+}
+
+/* Add focus effect for better user interaction */
+.form-control:focus, .form-select:focus {
+    border-color: #133267; /* Darker blue on focus */
+    box-shadow: 0 0 8px #133267;
+}
+
+/* Improve form layout spacing */
+.row .col-md-4, .row .col-md-6 {
+    margin-bottom: 15px;
+}
+
+/* Card styling for sections */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Improve card headers */
+.card-header {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    background-color: #133267 !important;
+}
+

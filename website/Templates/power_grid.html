@@ -1,0 +1,474 @@
+{% extends "base.html" %} {% block content %}<!DOCTYPE html>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='power_grid.css') }}"
+/>
+<div class="my-container">
+  <div class="header">
+    <h1>Bangladesh Power Grid</h1>
+    <p>
+      Comprehensive overview of power generation facilities across Bangladesh
+    </p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>12,000+</h3>
+      <p>Total MW Capacity</p>
+    </div>
+    <div class="stat-card">
+      <h3>50+</h3>
+      <p>Power Stations</p>
+    </div>
+    <div class="stat-card">
+      <h3>8</h3>
+      <p>Energy Sources</p>
+    </div>
+    <div class="stat-card">
+      <h3>64</h3>
+      <p>Districts Covered</p>
+    </div>
+  </div>
+
+  <div
+    class="stats-link-container"
+    style="text-align: center; margin-top: 1rem"
+  >
+    <a
+      href="https://misc.bpdb.gov.bd/storage/daily_entry/2025-06-29.pdf"
+      target="_blank"
+      style="text-decoration: none"
+    >
+      <button
+        style="
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 12px 50px;
+          font-size: 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        "
+        onmouseover="this.style.backgroundColor='#0056b3'"
+        onmouseout="this.style.backgroundColor='#007bff'"
+      >
+        View Power Demand & Generation Stats
+      </button>
+    </a>
+  </div>
+
+  <div class="accordion">
+    <!-- Nuclear Power -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>⚛️ Nuclear Power Stations</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Nuclear Energy Overview</h4>
+            <p>
+              Bangladesh's first nuclear power plant under construction with
+              Russian VVER technology
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Units</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rooppur Nuclear Power Plant</strong></td>
+                <td class="location-text">Rooppur</td>
+                <td><span class="capacity-badge">2400 MW</span></td>
+                <td>2 × 1200 MW VVER-1200/523</td>
+                <td><span class="type-badge">Under Construction</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coal Fired -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>⚫ Coal-Fired Power Stations</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Coal Power Generation</h4>
+            <p>
+              Major coal-fired power plants with ultra-supercritical technology
+              for higher efficiency
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Coal Type</th>
+                <th>Technology</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Barapukuria Power Station</strong></td>
+                <td class="location-text">Durgapur, Dinajpur</td>
+                <td><span class="capacity-badge">525 MW</span></td>
+                <td>Anthracite</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td><strong>Rampal Power Station</strong></td>
+                <td class="location-text">Rampal Upazila, Bagerhat</td>
+                <td><span class="capacity-badge">1320 MW</span></td>
+                <td>Sub-bituminous</td>
+                <td>Ultra Super Critical</td>
+              </tr>
+              <tr>
+                <td><strong>Payra Power Plant</strong></td>
+                <td class="location-text">Kalapara, Patuakhali</td>
+                <td><span class="capacity-badge">1320 MW</span></td>
+                <td>Sub-bituminous</td>
+                <td>Ultra Super Critical</td>
+              </tr>
+              <tr>
+                <td><strong>Matarbari Power Station</strong></td>
+                <td class="location-text">Maheshkhali, Cox's Bazar</td>
+                <td><span class="capacity-badge">1200 MW</span></td>
+                <td>Sub-bituminous</td>
+                <td>Ultra Super Critical</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oil and Gas Thermal -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>🔥 Oil & Gas Thermal Power Stations</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Thermal Power Generation</h4>
+            <p>
+              Traditional thermal power plants using oil and natural gas as
+              primary fuel sources
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Location</th>
+                <th>Capacity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Ashuganj Power Station</strong></td>
+                <td class="location-text">Brahmanbaria</td>
+                <td><span class="capacity-badge">1627 MW</span></td>
+              </tr>
+              <tr>
+                <td><strong>Ghorasal Power Station</strong></td>
+                <td class="location-text">Ghorasal</td>
+                <td><span class="capacity-badge">950 MW</span></td>
+              </tr>
+              <tr>
+                <td><strong>Payra LNG Power Plant</strong></td>
+                <td class="location-text">Kalapara, Patuakhali</td>
+                <td><span class="capacity-badge">3600 MW</span></td>
+              </tr>
+              <tr>
+                <td><strong>Orion Group (4 plants)</strong></td>
+                <td class="location-text">Narayangonj & Khulna</td>
+                <td><span class="capacity-badge">400 MW</span></td>
+              </tr>
+              <tr>
+                <td><strong>Siddhirganj Power Station</strong></td>
+                <td class="location-text">Siddhirganj</td>
+                <td><span class="capacity-badge">260 MW</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gas Turbines -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>🌪️ Gas Turbine Power Stations</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Gas Turbine Technology</h4>
+            <p>
+              High-efficiency gas turbine plants for rapid power generation and
+              grid stability
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Capacity</th>
+                <th>Turbines</th>
+                <th>Fuel Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Meghnaghat</strong></td>
+                <td><span class="capacity-badge">450 MW</span></td>
+                <td>2+1</td>
+                <td><span class="type-badge">Natural Gas</span></td>
+              </tr>
+              <tr>
+                <td><strong>Haripur</strong></td>
+                <td><span class="capacity-badge">360 MW</span></td>
+                <td>1+1</td>
+                <td><span class="type-badge">Natural Gas</span></td>
+              </tr>
+              <tr>
+                <td><strong>Goalpara, Khulna</strong></td>
+                <td><span class="capacity-badge">265 MW</span></td>
+                <td>-</td>
+                <td><span class="type-badge">Heavy Fuel Oil</span></td>
+              </tr>
+              <tr>
+                <td><strong>Siddhirganj</strong></td>
+                <td><span class="capacity-badge">240 MW</span></td>
+                <td>-</td>
+                <td><span class="type-badge">Natural Gas</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mymensingh</strong></td>
+                <td><span class="capacity-badge">210 MW</span></td>
+                <td>4+1</td>
+                <td><span class="type-badge">Natural Gas</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combined Cycle -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>🔄 Combined Cycle Power Plants</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Combined Cycle Technology</h4>
+            <p>
+              High-efficiency power plants combining gas and steam turbines for
+              maximum fuel utilization
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Location</th>
+                <th>Capacity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Haripur Combined Cycle Power Plant</strong></td>
+                <td class="location-text">Narayanganj</td>
+                <td><span class="capacity-badge">412 MW</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Bheramara Combined Cycle Power Plant</strong>
+                </td>
+                <td class="location-text">Kushtia</td>
+                <td><span class="capacity-badge">410 MW</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Siddhirganj Combined Cycle Power Plant</strong>
+                </td>
+                <td class="location-text">Narayanganj</td>
+                <td><span class="capacity-badge">335 MW</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Fenchugonj Combined Cycle Power Plant</strong>
+                </td>
+                <td class="location-text">Sylhet</td>
+                <td><span class="capacity-badge">180 MW</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hydroelectric -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>💧 Hydroelectric Power Station</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Hydroelectric Power</h4>
+            <p>Clean renewable energy from Bangladesh's river systems</p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Power Station</th>
+                <th>Capacity</th>
+                <th>Turbines</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Karnafuli Hydroelectric</strong></td>
+                <td><span class="capacity-badge">230 MW</span></td>
+                <td>5 units</td>
+                <td><span class="type-badge">Hydroelectric</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solar PV -->
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>☀️ Solar Power Projects</h3>
+        <span class="accordion-icon">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="accordion-body">
+          <div class="section-info">
+            <h4>Solar Energy Initiative</h4>
+            <p>
+              Government's ambitious plan to generate 10% electricity from
+              renewable sources by 2020
+            </p>
+          </div>
+          <table class="power-table">
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Teknaf Solar Park</strong></td>
+                <td class="location-text">Teknaf</td>
+                <td><span class="capacity-badge">28 MW</span></td>
+                <td><span class="type-badge">Proposed</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sutiakhali Solar Park</strong></td>
+                <td class="location-text">Mymensingh</td>
+                <td><span class="capacity-badge">50 MW</span></td>
+                <td><span class="type-badge">Proposed</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sunamganj Solar Park</strong></td>
+                <td class="location-text">Sunamganj</td>
+                <td><span class="capacity-badge">32 MW</span></td>
+                <td><span class="type-badge">Proposed</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sun Solar Power Plant</strong></td>
+                <td class="location-text">Sylhet</td>
+                <td><span class="capacity-badge">5 MW</span></td>
+                <td><span class="type-badge">Operational</span></td>
+              </tr>
+              <tr>
+                <td><strong>Total Solar Projects</strong></td>
+                <td class="location-text">Nationwide</td>
+                <td><span class="capacity-badge">1070 MW</span></td>
+                <td><span class="type-badge">19 Projects</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleAccordion(header) {
+    const content = header.nextElementSibling;
+    const icon = header.querySelector(".accordion-icon");
+    const isActive = content.classList.contains("active");
+
+    // Close all accordion items
+    document.querySelectorAll(".accordion-content").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    document.querySelectorAll(".accordion-icon").forEach((icon) => {
+      icon.style.transform = "rotate(0deg)";
+    });
+
+    // Toggle current item
+    if (!isActive) {
+      content.classList.add("active");
+      icon.style.transform = "rotate(180deg)";
+    }
+  }
+
+  // Add smooth scrolling animation
+  document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".stat-card, .accordion-item");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    });
+
+    cards.forEach((card) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(20px)";
+      card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+      observer.observe(card);
+    });
+  });
+</script>
+
+{% endblock %}

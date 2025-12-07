@@ -1,0 +1,184 @@
+{% extends "base.html" %} {% block content %}
+<style>
+  .payment-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 0;
+    margin: 0;
+  }
+
+  .payment-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 450px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .payment-header {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .payment-header h1 {
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .payment-header p {
+    color: #666;
+    font-size: 16px;
+  }
+
+  .payment-form-group {
+    margin-bottom: 25px;
+    position: relative;
+  }
+
+  .payment-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .payment-form-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+  }
+
+  .payment-form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .payment-form-group input::placeholder {
+    color: #adb5bd;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .security-info {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e5e9;
+  }
+
+  .security-info p {
+    color: #666;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .security-icon {
+    width: 16px;
+    height: 16px;
+    fill: #28a745;
+  }
+
+  @media (max-width: 480px) {
+    .payment-container {
+      padding: 30px 20px;
+      margin: 0 15px;
+    }
+
+    .payment-header h1 {
+      font-size: 24px;
+    }
+
+    .payment-section {
+      padding: 40px 0;
+    }
+  }
+</style>
+
+<section class="payment-section">
+  <div class="container">
+    <div class="payment-container">
+      <div class="payment-header">
+        <h1>Send Funds</h1>
+        <p>Enter your details to proceed with payment</p>
+      </div>
+
+      <form action="/sendfunds" method="POST">
+        <div class="payment-form-group">
+          <label for="meter_id">Receiver Meter ID</label>
+          <input
+            type="text"
+            name="meter_id"
+            id="meter_id"
+            placeholder="Enter Receiver's Meter ID"
+            required
+          />
+        </div>
+
+        <div class="payment-form-group">
+          <label for="amount">Amount</label>
+          <input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="Enter Amount"
+            min="1"
+            step="0.01"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Funds</button>
+      </form>
+
+      <div class="security-info">
+        <p>
+          <svg class="security-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"
+            />
+          </svg>
+          Secure payment processing
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

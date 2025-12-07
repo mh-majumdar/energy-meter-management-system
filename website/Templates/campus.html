@@ -1,0 +1,106 @@
+{% extends "base.html" %} {% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='campus.css') }}" />
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<div class="container my-5">
+  <h1 class="rules-title">Rules</h1>
+  <hr class="mb-4 w-25 mx-auto" />
+
+  <div class="row">
+    <!-- Eligibility Section -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <span class="rule-section-header">— Eligibility</span>
+        </div>
+        <div class="card-body">
+          <div class="rule-item">
+            Both DSLR and Mobile photographs are allowed. But there will be no
+            separate judging procedure for the two separate devices. We believe
+            the content of the photograph matters, not the device.
+          </div>
+          <div class="rule-item">
+            Submission of photos awarded previously in any other
+            exhibition/Contest is strongly discouraged.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selection Process Section -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <span class="rule-section-header">— Selection Process</span>
+        </div>
+        <div class="card-body">
+          <div class="rule-item">
+            Each submission will primarily be judged. Participants will not have
+            to pay any submission fees.
+          </div>
+          <div class="rule-item">
+            Selected photographs must be registered by paying submission fees
+            for each photo.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Requirement Section -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <span class="rule-section-header">— Image Requirement</span>
+        </div>
+        <div class="card-body">
+          <div class="rule-item">
+            The submitted photograph/s must be in JPEG or JPG format with at
+            least 3000pixels on the longer side & minimum resolution of 300dpi.
+          </div>
+          <div class="rule-item">
+            A participant can submit both color and Black & White (Monochrome)
+            photos.
+          </div>
+          <div class="rule-item">
+            Photograph/s with any watermark, logo and border will not be
+            eligible for submission.
+          </div>
+          <div class="rule-item">
+            The photograph must be the sole work of the entrant and must not
+            contain obscene, provocative, defamatory, sexually explicit.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submission Format Section -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <span class="rule-section-header">— Submission Format</span>
+        </div>
+        <div class="card-body">
+          <div class="rule-item">Photo Renaming (very important):</div>
+          <div class="rule-item">
+            Photographer's Full Name_ Photo No _Caption_Phone No_Institution
+            Name. Example: Mehedi Hasan_01 _Beautiful Bangladesh_ 017********
+            _NSTU.
+          </div>
+          <div class="rule-item">
+            If you are no longer affiliated with an institution, you can simply
+            list 'Freelancer' as the institution name.
+          </div>
+          <div class="rule-item">
+            Each participant can submit total maximum of 3 photos.
+          </div>
+          <div class="rule-item">Each photo can be maximum 6 MB in size.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

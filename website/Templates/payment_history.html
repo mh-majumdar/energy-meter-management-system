@@ -1,0 +1,555 @@
+{% extends "base.html" %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History - Smart Meter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .filter-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .transaction-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+        }
+        
+        .table thead th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        .table thead th:last-child {
+            border-top-right-radius: 10px;
+        }
+        
+        .table tbody tr {
+            border-bottom: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-1px);
+        }
+        
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        
+        .amount-credit {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .amount-debit {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .transaction-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        
+        .badge-credit {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-debit {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .badge-send {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-receive {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.4);
+            color: white;
+        }
+        
+        .charts-section {
+            margin-top: 40px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .pagination-custom .page-link {
+            border-radius: 50%;
+            margin: 0 5px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .pagination-custom .page-item.active .page-link {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .stats-row {
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2 class="text-dark mb-0">
+                    <i class="fas fa-history text-primary me-2"></i>Payment History
+                </h2>
+                <p class="text-muted">Meter ID: {{ meter_account.meter_id }}</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('views.export_transactions') }}" class="btn export-btn">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </a>
+            </div>
+        </div>
+
+        
+            
+        </div>
+
+        <!-- Filters -->
+        <div class="card filter-card mb-4">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Transaction Type</label>
+                        <select name="type" class="form-select">
+                            <option value="all" {{ 'selected' if current_type == 'all' }}>All Transactions</option>
+                            <option value="credit" {{ 'selected' if current_type == 'credit' }}>Credits Only</option>
+                            <option value="debit" {{ 'selected' if current_type == 'debit' }}>Debits Only</option>
+                            <option value="send" {{ 'selected' if current_type == 'send' }}>Sent Funds</option>
+                            <option value="receive" {{ 'selected' if current_type == 'receive' }}>Received Funds</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">From Date</label>
+                        <input type="date" name="date_from" class="form-control" value="{{ current_date_from or '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To Date</label>
+                        <input type="date" name="date_to" class="form-control" value="{{ current_date_to or '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter me-2"></i>Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transaction Table -->
+        {% if transactions.items %}
+            <div class="transaction-table">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>SL No.</th>
+                                <th>Date</th>
+                                <th>Transaction Type</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions.items %}
+                                {% set is_credit = transaction.transaction_type == 'credit' or (transaction.transaction_type == 'receive' and transaction.receiver_id == meter_account.id) %}
+                                {% set is_debit = transaction.transaction_type == 'send' and transaction.sender_id == meter_account.id %}
+                                {% set amount_class = 'amount-credit' if is_credit else ('amount-debit' if is_debit else 'amount-neutral') %}
+                                {% set amount_prefix = '+' if is_credit else ('-' if is_debit else '') %}
+                                {% set badge_class = 'badge-credit' if is_credit else ('badge-debit' if is_debit else ('badge-' + transaction.transaction_type)) %}
+                                
+                                <tr>
+                                    <td>{{ loop.index + (transactions.page - 1) * transactions.per_page }}</td>
+                                    <td>
+                                        <div>{{ transaction.created_at.strftime('%d %b %Y') }}</div>
+                                        <small class="text-muted">{{ transaction.created_at.strftime('%I:%M %p') }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="transaction-badge {{ badge_class }}">
+                                            {% if transaction.transaction_type == 'credit' %}
+                                                <i class="fas fa-plus me-1"></i>Credit
+                                            {% elif transaction.transaction_type == 'send' %}
+                                                <i class="fas fa-arrow-up me-1"></i>Send
+                                            {% elif transaction.transaction_type == 'receive' %}
+                                                <i class="fas fa-arrow-down me-1"></i>Receive
+                                            {% else %}
+                                                <i class="fas fa-exchange-alt me-1"></i>{{ transaction.transaction_type.title() }}
+                                            {% endif %}
+                                        </span>
+                                        {% if transaction.description %}
+                                            <div class="small text-muted mt-1">{{ transaction.description }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="h6 {{ amount_class }}">
+                                            {{ amount_prefix }}৳{{ "%.2f"|format(transaction.amount) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            {% if transactions.pages > 1 %}
+                <div class="d-flex justify-content-center mt-4">
+                    <nav>
+                        <ul class="pagination pagination-custom">
+                            {% if transactions.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('views.payment_history', page=transactions.prev_num, type=current_type, date_from=current_date_from, date_to=current_date_to) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page_num in transactions.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != transactions.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('views.payment_history', page=page_num, type=current_type, date_from=current_date_from, date_to=current_date_to) }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if transactions.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('views.payment_history', page=transactions.next_num, type=current_type, date_from=current_date_from, date_to=current_date_to) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="text-center text-muted small mb-4">
+                    Showing {{ transactions.per_page * (transactions.page - 1) + 1 }} to 
+                    {{ transactions.per_page * (transactions.page - 1) + transactions.items|length }} 
+                    of {{ transactions.total }} transactions
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- No Transactions -->
+            <div class="text-center py-5">
+                <i class="fas fa-receipt text-muted" style="font-size: 64px;"></i>
+                <h4 class="text-muted mt-3">No Transactions Found</h4>
+                <p class="text-muted">You haven't made any transactions yet or no transactions match your filters.</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('views.payment') }}" class="btn btn-primary me-2">
+                        <i class="fas fa-plus me-2"></i>Add Funds
+                    </a>
+                    <a href="{{ url_for('views.sendfunds') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Send Funds
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Charts Section -->
+        {% if transactions.items %}
+            <div class="charts-section">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-chart-line text-primary me-2"></i>3-Month Transaction Analysis
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <div class="chart-title">
+                                <i class="fas fa-plus-circle text-success me-2"></i>Monthly Credits
+                            </div>
+                            <canvas id="creditsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <div class="chart-title">
+                                <i class="fas fa-minus-circle text-danger me-2"></i>Monthly Debits
+                            </div>
+                            <canvas id="debitsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-container">
+                            <div class="chart-title">
+                                <i class="fas fa-chart-bar text-info me-2"></i>Combined Monthly Overview
+                            </div>
+                            <canvas id="combinedChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js Implementation -->
+    <script>
+        // Sample data - Replace with actual data from your backend
+        const monthlyData = {
+            labels: ['3 Months Ago', '2 Months Ago', 'Last Month'],
+            credits: [1200, 1500, 1800],
+            debits: [800, 1200, 1400]
+        };
+
+        // Credits Chart
+        const creditsCtx = document.getElementById('creditsChart');
+        if (creditsCtx) {
+            new Chart(creditsCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Credits (৳)',
+                        data: monthlyData.credits,
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#28a745',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '৳' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Debits Chart
+        const debitsCtx = document.getElementById('debitsChart');
+        if (debitsCtx) {
+            new Chart(debitsCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Debits (৳)',
+                        data: monthlyData.debits,
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#dc3545',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '৳' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Combined Chart
+        const combinedCtx = document.getElementById('combinedChart');
+        if (combinedCtx) {
+            new Chart(combinedCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyData.labels,
+                    datasets: [{
+                        label: 'Credits',
+                        data: monthlyData.credits,
+                        backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                        borderColor: '#28a745',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }, {
+                        label: 'Debits',
+                        data: monthlyData.debits,
+                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                        borderColor: '#dc3545',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '৳' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>{% endblock %}
