@@ -108,23 +108,29 @@ Digital Meter Service/
    ```
 
 2. **Create a virtual environment**
+3. ```bash
    python -m venv venv
    source venv/bin/activate # On Windows: venv\Scripts\activate
+   ```
 
-3. **Install dependencies**
+4. **Install dependencies**
+5. ```bash
    pip install flask flask-sqlalchemy flask-login flask-mail flask-wtf wtforms requests pypdf2
+   ```
 
-4. **Initialize the database**
-   python
-
+6. **Initialize the database**
+   ```bash
    > > > from website import create_app, db
    > > > app = create_app()
    > > > with app.app_context():
    > > > ... db.create_all()
    > > > exit()
+   ```
 
-5. **Run the application**
+7. **Run the application**
+8. ```bash
    python app.py
+   ```
 
 Usage
 User Registration & Login
@@ -164,11 +170,8 @@ Create a feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
 Push to the branch (git push origin feature/amazing-feature)
 Open a Pull Request
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
 
-👥 Author
-[Your Name]
+
 
 🙏 Acknowledgments
 Flask documentation and community
