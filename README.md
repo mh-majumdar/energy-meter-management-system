@@ -109,5 +109,4 @@ A comprehensive digital meter management system built with Flask, designed to he
 Flask documentation and community
 BulkSMSBD for SMS service
 All contributors and supporters
-📧 Contact
-For questions or suggestions, please contact [your-email@example.com]
+
